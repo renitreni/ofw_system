@@ -9,6 +9,11 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    const ROLE_SUPERADMIN = 'SuperAdmin';
+    const ROLE_ADMIN = 'Admin';
+    const ROLE_AGENT = 'Agent';
+    const ROLE_OFW = 'Ofw';
+    
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
@@ -21,6 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
