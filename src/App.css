@@ -1,0 +1,1151 @@
+:root {
+  --main-gray: #828282;
+  --bg-dark: #7a7a7a;
+  --glass: rgba(255, 255, 255, 0.15);
+}
+
+#root { width: 100%; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+
+.hero-page {
+  background: linear-gradient(135deg, #757575 0%, #a3a3a3 100%);
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 10%;
+  overflow: hidden;
+}
+
+.nav-left, .nav-right { flex: 1; display: flex; }
+.nav-right { justify-content: flex-end; }
+.nav-center { display: flex; gap: 40px; }
+
+.nav-left, .nav-right {
+  color: #000000;
+}
+
+.pill-btn-dark {
+  background: #3d3d3d; color: #fff; border: none;
+  padding: 10px 25px; border-radius: 8px; font-weight: bold;
+}
+
+.hero-body { z-index: 10; max-width: 650px; }
+.hero-title { font-size: 4.2rem; color: #fff; line-height: 1.1; margin: 0; font-weight: 700; }
+.hero-subtitle { color: rgba(255,255,255,0.9); font-size: 1.25rem; margin: 25px 0 45px; }
+
+.pill-btn-white {
+  background: #fff; border: none; padding: 16px 45px;
+  border-radius: 12px; font-weight: bold; cursor: pointer;
+}
+
+.text-link { background: none; border: none; color: #fff; font-size: 1.1rem; margin-left: 30px; }
+
+.glow-wave {
+  position: absolute; width: 850px; height: 850px;
+  border: 14px solid #fff; border-radius: 46%;
+  top: -220px; left: -180px;
+  filter: blur(1.2px);
+  box-shadow: 0 0 30px rgba(255,255,255,0.45);
+  transform: rotate(26deg);
+  z-index: 5;
+}
+
+.subtle-wave {
+  position: absolute; width: 550px; height: 550px;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-radius: 40%; bottom: -130px; right: -60px;
+  z-index: 5;
+}
+
+.organic-bg-shape {
+  position: absolute; width: 100%; height: 100%;
+  background: #7a7a7a; top: 0; right: -25%;
+  clip-path: ellipse(85% 100% at 100% 50%);
+  z-index: 1;
+}
+
+.scroll-content { padding: 100px 10%; background: #fff; }
+.stats-container { display: flex; gap: 35px; justify-content: center; margin-bottom: 100px; }
+.stat-card {
+  background: #f4f4f4; padding: 55px; border-radius: 45px;
+  width: 340px; text-align: center; border: 1px solid #e0e0e0;
+}
+.shadow-mode { background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+.bento-layout {
+  display: flex; gap: 50px; align-items: center;
+  background: var(--main-gray); padding: 70px;
+  border-radius: 50px; color: #fff;
+}
+
+.bento-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; flex: 1;
+}
+
+.bento-box {
+  background: rgba(255,255,255,0.1); padding: 40px;
+  border-radius: 25px; border: 1px solid rgba(255,255,255,0.1);
+}
+
+.scroll-content h2 {
+  color: #000000;  
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.stat-card h3 {
+  color: #000000; 
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+}
+
+.stat-card p {
+  color: #444444; 
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.bento-header {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.scroll-content p {
+  color: #333333;
+  line-height: 1.6;
+}
+
+.main-footer {
+  background: #f4f4f4;
+  color: #000000;
+  padding: 60px 10% 20px;
+}
+
+.footer-brand h3, 
+.footer-links h4 {
+  color: #000000;
+  font-weight: 700;
+}
+
+.footer-links p, 
+.footer-bottom {
+  color: #555555;
+}
+
+
+/* 1. The "Sign In Now" pill in the Navigation Bar */
+.pill-btn-dark {
+  background: #3d3d3d; /* Dark background */
+  color: #ffffff;      /* Keep this white for contrast against dark bg */
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* 2. The main "Sign In Now" button on the White Pill (Hero Section) */
+.pill-btn-white {
+  background: #ffffff; 
+  color: #000000;      /* <--- Changes the text to Black as requested */
+  border: none; 
+  padding: 16px 45px;
+  border-radius: 12px; 
+  font-weight: bold; 
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* 3. Hover effect for the white pill to keep it professional */
+.pill-btn-white:hover {
+  background: #e6e6e6;
+  color: #000000;
+}
+
+/* 4. Stat Card numbers (Double checking h3 is black) */
+.stat-card h3 {
+  color: #000000 !important;
+}
+
+/* Color Palette & Global Reset */
+:root {
+  --main-gray: #8c8c8c;
+  --bg-dark: #7a7a7a;
+  --glass: rgba(255, 255, 255, 0.15);
+}
+
+#root { width: 100%; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; overflow-x: hidden; }
+
+/* HERO SETUP */
+.hero-page {
+  background: linear-gradient(135deg, #757575 0%, #a3a3a3 100%);
+  height: 100vh; width: 100vw; position: relative;
+  display: flex; align-items: center; padding: 0 10%; overflow: hidden;
+}
+/* --- UPDATED NAVIGATION ALIGNMENT --- */
+
+/* --- NAVIGATION ALIGNMENT FIX --- */
+/* --- THE ULTIMATE NAVIGATION FIX --- */
+.glass-nav {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 15px 5% !important;
+  background: rgba(164, 160, 160, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  z-index: 2000 !important; /* Higher z-index to stay on top */
+}
+
+/* 1. Reset the Left/Right containers so they don't fight for space */
+.nav-left, .nav-right {
+  flex: 0 0 auto !important; /* Stop them from taking up 1/3 of the screen */
+  width: auto !important;
+}
+
+/* 2. Push the links to the left, but add a 50px gap from the logo */
+.nav-center {
+  flex: 1 !important; 
+  display: flex !important;
+  justify-content: flex-start !important; 
+  
+  /* This moves the menu to the right of the logo just a bit */
+  margin-left: 50px !important; 
+  
+  gap: 30px !important; /* Space between links */
+}
+
+/* 3. Ensure the News button (and all links) stays on one line */
+.nav-link {
+  background: none !important;
+  border: none !important;
+  color: #000000 !important;
+  font-weight: 700 !important;
+  font-size: 1rem !important;
+  white-space: nowrap !important; /* Prevents button from disappearing */
+  cursor: pointer !important;
+  opacity: 1 !important;
+}
+
+/* 4. Fix the right-side button alignment */
+.nav-right {
+  margin-left: auto !important;
+}
+
+
+/* Ensure the logo is visible */
+.logo-circle {
+  width: 40px;
+  height: 40px;
+  background: #000000;
+  border-radius: 50%;
+}
+
+.pill-btn-dark {
+  background: #3d3d3d; color: #fff; border: none;
+  padding: 10px 25px; border-radius: 8px; font-weight: bold; cursor: pointer;
+}
+
+/* HERO CONTENT */
+.hero-body { z-index: 10; max-width: 650px; color: #fff; }
+.hero-title { font-size: 4.2rem; line-height: 1.1; margin: 0; font-weight: 700; }
+.hero-subtitle { color: rgba(255,255,255,0.9); font-size: 1.25rem; margin: 25px 0 45px; }
+
+.pill-btn-white {
+  background: #fff; color: #000; border: none; padding: 16px 45px;
+  border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s;
+}
+.pill-btn-white:hover { background: #f0f0f0; transform: translateY(-2px); }
+
+.text-link { background: none; border: none; color: #fff; font-size: 1.1rem; margin-left: 30px; cursor: pointer; }
+
+/* ORNAMENTS */
+.glow-wave {
+  position: absolute; width: 850px; height: 850px; border: 14px solid #fff; border-radius: 46%;
+  top: -220px; left: -180px; filter: blur(1.2px); box-shadow: 0 0 30px rgba(255,255,255,0.45);
+  transform: rotate(26deg); z-index: 5; pointer-events: none;
+}
+.organic-bg-shape {
+  position: absolute; width: 100%; height: 100%; background: #7a7a7a; top: 0; right: -25%;
+  clip-path: ellipse(85% 100% at 100% 50%); z-index: 1;
+}
+
+/* SCROLLABLE CONTENT (Readability) */
+.scroll-content { padding: 100px 10%; background: #fff; }
+
+.stats-container { display: flex; gap: 35px; justify-content: center; margin-bottom: 100px; }
+.stat-card {
+  background: #f4f4f4; padding: 55px; border-radius: 45px;
+  width: 340px; text-align: center; border: 1px solid #e0e0e0; transition: 0.3s;
+}
+.stat-card h3 { color: #000; font-size: 2rem; margin: 0; }
+.stat-card p { color: #555; font-weight: 500; margin-top: 10px; }
+.shadow-mode { background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+.stat-card:hover { transform: translateY(-10px); }
+
+/* BENTO (Premium Hover) */
+.bento-layout {
+  display: flex; gap: 50px; align-items: center;
+  background: var(--main-gray); padding: 70px; border-radius: 50px; color: #fff;
+}
+.bento-header { font-size: 2.2rem; font-weight: 700; width: 300px; }
+.bento-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; flex: 1; }
+.bento-box {
+  background: rgba(255,255,255,0.15); padding: 35px; border-radius: 25px;
+  border: 1px solid rgba(255,255,255,0.1); font-weight: 600;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.bento-box:hover {
+  background: rgba(255, 255, 255, 0.25); transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+.bento-box.tall { grid-row: span 2; display: flex; align-items: center; }
+
+/* HOW IT WORKS & TESTIMONIALS */
+.how-it-works, .testimonials { text-align: center; margin-top: 120px; }
+.section-title { color: #000; font-size: 2.5rem; font-weight: 700; margin-bottom: 60px; }
+
+.process-row { display: flex; justify-content: space-between; position: relative; }
+.step-circle { width: 65px; height: 65px; background: #e8e8e8; border-radius: 50%; margin: 0 auto 20px; transition: 0.3s; }
+.step:hover .step-circle { background: var(--main-gray); transform: scale(1.1); }
+.step p { color: #000; font-size: 0.95rem; }
+
+.testi-row { display: flex; gap: 30px; margin-top: 20px; }
+.testi-card { background: #f9f9f9; padding: 45px; border-radius: 40px; flex: 1; text-align: left; }
+.quote-marks { color: #ddd; font-size: 3rem; line-height: 1; margin-bottom: 10px; }
+.testi-card p { color: #333; line-height: 1.6; }
+.user-meta { margin-top: 25px; color: #000; }
+.user-meta span { color: #777; font-size: 0.9rem; }
+
+/* FOOTER */
+.main-footer { background: #f2f2f2; padding: 80px 10% 30px; border-top: 1px solid #eee; }
+.footer-top { display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding-bottom: 50px; }
+.footer-logo { display: flex; align-items: center; gap: 15px; color: #000; }
+.logo-circle-small { width: 40px; height: 40px; background: #fff; border-radius: 50%; border: 1px solid #ddd; }
+.footer-links-grid { display: flex; gap: 60px; }
+.link-col h4 { color: #000; margin-bottom: 15px; }
+.link-col p { color: #666; font-size: 0.9rem; }
+.footer-bottom { text-align: center; padding-top: 30px; font-size: 0.85rem; color: #888; }
+
+/* Keep existing Hero and Bento CSS */
+
+/* --- FAQ SECTION --- */
+.faq-section { padding: 80px 10%; background: #fff; text-align: center; }
+.section-title { color: #000; font-size: 2.2rem; margin-bottom: 50px; font-weight: 700; }
+
+.faq-list { max-width: 900px; margin: 0 auto; }
+.faq-item {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 0; border-bottom: 1px solid #ddd; cursor: pointer;
+  color: #333; font-weight: 500;
+}
+.arrow-down { font-size: 1.5rem; color: #666; }
+
+/* --- LATEST UPDATES --- */
+.updates-section { padding: 80px 10%; background: #f9f9f9; }
+.updates-container { display: flex; gap: 40px; align-items: center; margin-top: 40px; }
+
+.update-images { display: flex; gap: 15px; flex: 1; }
+.img-large { width: 280px; height: 350px; background: #ddd; border-radius: 20px; }
+.img-small-stack { display: flex; flex-direction: column; gap: 15px; }
+.img-small { width: 180px; height: 165px; background: #ddd; border-radius: 20px; }
+
+.update-text { flex: 1; color: #444; font-size: 1.2rem; line-height: 2; font-weight: 500; }
+
+/* --- FOOTER & INTERESTED BAR --- */
+.footer-area { background: #e0e0e0; padding: 0 10% 20px; }
+
+.interested-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #d6d6d6; padding: 25px 40px; border-radius: 0 0 40px 40px;
+  margin-bottom: 50px; border-top: 1px solid #ccc;
+}
+.interested-text { font-size: 1.8rem; font-weight: 700; color: #555; }
+.register-now-btn { 
+  background: #f0f0f0; color: #000; border: none; padding: 12px 35px; 
+  border-radius: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.footer-main { display: flex; justify-content: space-between; padding-bottom: 40px; }
+.footer-brand h3 { color: #000; margin: 15px 0 5px; }
+.footer-subtext { color: #666; font-size: 0.9rem; margin: 0; }
+.social-icons { margin-top: 20px; letter-spacing: 15px; color: #444; }
+
+.footer-links-grid { display: flex; gap: 60px; }
+.footer-col h4 { color: #000; margin-bottom: 15px; }
+.footer-col p { color: #666; font-size: 0.85rem; margin: 5px 0; }
+
+.footer-copyright { text-align: center; border-top: 1px solid #ccc; padding-top: 20px; font-size: 0.8rem; color: #888; }
+
+/* --- FAQ STYLING --- */
+.faq-section {
+  padding: 100px 10%;
+  background: #ffffff;
+  text-align: center;
+}
+
+.faq-main-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #000;
+  margin-bottom: 60px;
+}
+
+.faq-list {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-item-container {
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.faq-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.faq-header:hover {
+  opacity: 0.7;
+}
+
+.faq-question {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.arrow-icon {
+  font-size: 1.4rem;
+  color: #666;
+  transition: transform 0.4s ease; /* Makes arrow flip smoothly */
+}
+
+/* Rotate arrow when open */
+.arrow-icon.open {
+  transform: rotate(180deg);
+}
+
+/* Answer Slide-down Logic */
+.faq-answer {
+  max-height: 0; /* Hidden by default */
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+  background: #fdfdfd;
+}
+
+.faq-answer.show {
+  max-height: 500px; /* High enough to contain the text */
+  transition: max-height 0.4s ease-in-out;
+}
+
+.answer-content {
+  padding: 0 0 25px 0;
+  color: #666;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* --- SMOOTH SCROLL OFFSET --- */
+section {
+  scroll-margin-top: 100px; /* This ensures the glass nav doesn't cover the title */
+}
+
+/* Ensure the nav stays at the top while scrolling */
+.glass-nav {
+  position: fixed; /* Changed from absolute to fixed */
+  top: 0; left: 0; width: 100%;
+  display: flex; align-items: center; padding: 20px 5%;
+  background: var(--glass); backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); z-index: 1000;
+}
+
+/* --- FIXED & PERMANENTLY VISIBLE NAVIGATION --- */
+.glass-nav {
+  position: fixed; /* Keeps nav at the top during scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 15px 5%;
+  
+  /* 1. Translucent Background (Visible on both gray and white) */
+  background: rgba(164, 160, 160, 0.85); 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* 2. The Secret for White Backgrounds: A Subtle Shadow */
+  /* This creates a "lift" so the nav doesn't disappear into white sections */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); 
+  
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.nav-link {
+  background: none;
+  border: none;
+  /* 3. Pure Black Text for Maximum Readability */
+  color: #000000 !important; 
+  font-weight: 700; /* Bolder text helps visibility */
+  cursor: pointer;
+  
+  /* 4. Remove Opacity: Keep them 100% solid at all times */
+  opacity: 1 !important; 
+  margin: 0 15px;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #666666 !important; /* Changes color on hover to show interactivity */
+}
+
+.nav-link.active {
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  text-decoration-thickness: 3px;
+}
+
+/* Ensure the Logo is also visible on white */
+.logo-circle {
+  width: 40px;
+  height: 40px;
+  background: #000000; /* Dark logo for contrast */
+  border-radius: 50%;
+}
+
+/* Prevent the fixed nav from hiding section headers when jumping */
+section {
+  scroll-margin-top: 100px; 
+}
+
+/* Container setup for alignment */
+.process-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  max-width: 900px;
+  margin: 60px auto 0;
+  position: relative; /* Necessary for the line positioning */
+}
+
+.step {
+  position: relative;
+  flex: 1;
+  text-align: center;
+  z-index: 2; /* Keeps circles above the line */
+}
+
+.step-circle {
+  width: 65px;
+  height: 65px;
+  background: #e8e8e8;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  border: 2px solid #fff; /* Adds a clean gap around the line */
+}
+
+.step p {
+  color: #000;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* --- THE DASHED LINE --- */
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 32px; /* Positioned at the center of the 65px circle */
+  left: 50%; /* Starts from the center of the current step */
+  width: 100%; /* Stretches to the center of the next step */
+  height: 2px;
+  border-top: 2px dashed #828282; /* Your main-gray color */
+  z-index: -1; /* Places the line behind the circles */
+}
+
+/* Optional: Animation to make it look premium */
+.step:hover .step-circle {
+  background: #828282;
+  transform: scale(1.1);
+  transition: 0.3s ease;
+}
+
+/* --- SECTION 6: TESTIMONIALS STYLING --- */
+.testimonials-section {
+  padding: 100px 10%;
+  background-color: #ffffff;
+  text-align: center;
+}
+
+.testi-container {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.testi-card {
+  background: #f9f9f9;
+  padding: 40px;
+  border-radius: 40px; /* Matching your bento/stat card style */
+  flex: 1;
+  max-width: 500px;
+  text-align: left;
+  transition: transform 0.3s ease;
+  border: 1px solid #eee;
+}
+
+.testi-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.quote-icon {
+  font-size: 3rem;
+  color: #cccccc;
+  line-height: 1;
+  margin-bottom: 15px;
+  font-family: serif;
+}
+
+.testi-text {
+  color: #333333;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.user-profile {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-profile strong {
+  color: #000000;
+  font-size: 1.1rem;
+}
+
+.user-profile span {
+  color: #888888;
+  font-size: 0.9rem;
+}
+
+/* Ensure the Section Title is Black */
+.testimonials-section .section-title {
+  color: #000000 !important;
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+/* --- COMBINED HOW-IT-WORKS & TESTIMONIALS --- */
+.how-it-works-combined {
+  padding: 100px 10%;
+  background-color: #ffffff;
+  text-align: center;
+}
+
+.how-it-works-header {
+  margin-bottom: 120px; /* Space between steps and testimonials */
+}
+
+.testimonials-integration {
+  padding-top: 80px;
+  border-top: 1px solid #f0f0f0; /* Subtle divider line */
+}
+
+/* Ensure consistent title sizes */
+.section-title {
+  color: #000000 !important;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 50px;
+}
+
+/* Re-applying the dash connection for Section 3 */
+.step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 32px; 
+  left: 50%; 
+  width: 100%;
+  height: 0;
+  border-top: 2px dashed #828282;
+  z-index: -1;
+}
+
+/* --- FOOTER LAYOUT --- */
+.footer-area {
+  background: #e0e0e0; /* Gray base from screenshot */
+  padding: 0 8% 20px;
+}
+
+.interested-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #d6d6d6;
+  padding: 35px 60px;
+  border-radius: 0 0 50px 50px; /* Hanging curved effect */
+  margin-bottom: 70px;
+  border-top: 1px solid #c0c0c0;
+}
+
+.interested-text {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #555;
+  font-family: serif; 
+}
+
+.register-now-btn {
+  background: #f0f0f0;
+  color: #000;
+  border: none;
+  padding: 15px 45px;
+  border-radius: 20px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.footer-main {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 50px;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.logo-circle-small {
+  width: 55px;
+  height: 55px;
+  background: #f5f5f5;
+  border-radius: 50%;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.brand-description p {
+  color: #333;
+  font-size: 0.95rem;
+  margin: 4px 0;
+  font-weight: 600;
+}
+
+.footer-links-grid {
+  display: flex;
+  gap: 70px;
+}
+
+.footer-col h4 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 25px;
+}
+
+.footer-col p {
+  color: #444;
+  font-weight: 600;
+  margin: 12px 0;
+}
+
+.footer-copyright {
+  text-align: center;
+  border-top: 1px solid #bbb;
+  padding-top: 25px;
+  color: #555;
+  font-weight: 600;
+}
+
+/* --- AUTH PAGE STYLES --- */
+.auth-page-wrapper {
+  height: 100vh; width: 100vw; background: #fff; position: relative; display: flex; overflow: hidden;
+}
+
+.auth-organic-shape {
+  position: absolute; width: 50%; height: 100%; background: #fff;
+  border: 1px solid #f0f0f0; z-index: 1; transition: all 0.5s ease;
+}
+
+/* Shape position for Login (Desktop-2) */
+.auth-organic-shape.left-side {
+  right: -5%; clip-path: ellipse(55% 100% at 100% 50%);
+  box-shadow: -20px 0 50px rgba(0,0,0,0.02);
+}
+
+/* Shape position for Register (Desktop-4) */
+.auth-organic-shape.right-side {
+  left: -5%; clip-path: ellipse(55% 100% at 0% 50%);
+  box-shadow: 20px 0 50px rgba(0,0,0,0.02);
+}
+
+.auth-container { width: 100%; padding: 5% 10%; z-index: 10; display: flex; flex-direction: column; }
+.auth-container.align-left { align-items: flex-start; }
+.auth-container.align-right { align-items: flex-end; text-align: right; }
+
+.auth-form-card { max-width: 400px; width: 100%; }
+.auth-input { 
+  background: #f0f0f0; border: 1px solid #e0e0e0; padding: 15px; 
+  border-radius: 10px; width: 100%; margin-bottom: 10px; 
+}
+.auth-submit-btn { 
+  background: #828282; color: #fff; border: none; padding: 15px; 
+  border-radius: 10px; width: 100%; font-weight: 700; cursor: pointer; 
+}
+.view-toggle-link { background: none; border: none; margin-top: 20px; cursor: pointer; color: #555; text-decoration: underline; }
+
+/* --- AUTH PAGE TEXT VISIBILITY --- */
+
+.auth-page-wrapper {
+  color: #000000; /* Sets default text color to black */
+}
+
+.auth-brand h3 {
+  color: #000000;
+  font-weight: 800;
+  margin: 0;
+}
+
+.auth-toggle-text {
+  color: #000000; /* Changed from gray to black */
+  font-weight: 700;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.auth-main-title {
+  color: #000000;
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 30px 0;
+}
+
+.auth-input {
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
+  margin-bottom: 15px;
+  color: #000000; /* Text you type will be black */
+  font-weight: 600;
+}
+
+.auth-input::placeholder {
+  color: #666666; /* Slightly darker placeholder for readability */
+}
+
+.auth-submit-btn {
+  background: #333333; /* Darker button for better contrast */
+  color: #ffffff;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.auth-submit-btn:hover {
+  background: #000000;
+}
+
+.auth-divider {
+  text-align: center;
+  margin: 25px 0;
+  color: #000000;
+  font-weight: 700;
+  position: relative;
+}
+
+.social-auth-btn {
+  background: #ffffff;
+  color: #000000; /* Black text for Google/Apple buttons */
+  border: 2px solid #e0e0e0;
+  padding: 12px;
+  border-radius: 12px;
+  width: 100%;
+  font-weight: 700;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.social-auth-btn:hover {
+  border-color: #000000;
+  background: #f9f9f9;
+}
+
+.view-toggle-link {
+  background: none;
+  border: none;
+  color: #000000;
+  font-weight: 700;
+  text-decoration: underline;
+  margin-top: 25px;
+  cursor: pointer;
+  display: block;
+}
+
+.back-home-btn {
+  color: #000000;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 20px;
+}
+
+/* Align content to the right for Register, left for Login */
+.auth-container.align-left { align-items: flex-start; text-align: left; }
+.auth-container.align-right { align-items: flex-end; text-align: right; }
+
+.auth-toggle-question {
+  color: #000;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+/* Move brand logo to the right side during Register */
+.auth-container.align-right .auth-brand {
+  flex-direction: row-reverse;
+}
+
+/* This handles the "Wavy" shape moving to the opposite side */
+.auth-organic-shape.right-side {
+  left: -10%;
+  right: auto;
+  clip-path: ellipse(55% 100% at 0% 50%);
+}
+
+.auth-organic-shape.left-side {
+  right: -10%;
+  left: auto;
+  clip-path: ellipse(55% 100% at 100% 50%);
+}
+
+/* Styling for the question and the "Create one" button */
+.auth-toggle-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.auth-question {
+  color: #000;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.auth-toggle-btn-inline {
+  background: none;
+  border: none;
+  color: #000;
+  font-weight: 800;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.95rem;
+}
+
+.auth-toggle-btn-inline:hover {
+  color: #666;
+}
+
+/* Ensure branding and shape flip correctly */
+.auth-container.align-right { align-items: flex-end; text-align: right; }
+.auth-container.align-right .auth-toggle-row { justify-content: flex-end; }
+.auth-container.align-right .auth-brand { flex-direction: row-reverse; }
+
+.auth-organic-shape.right-side {
+  left: -5%;
+  right: auto;
+  clip-path: ellipse(55% 100% at 0% 50%);
+}
+
+/* Container for the form elements */
+.auth-form-card {
+  max-width: 450px; /* Adjust based on your text box width */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Logic for Right Alignment (Create Account View) */
+.auth-form-card.align-right {
+  align-items: flex-end; /* Aligns all children to the right */
+  text-align: right;     /* Aligns text inside the children to the right */
+}
+
+/* Ensures the question and 'Sign in' link stay together and align right */
+.auth-form-card.align-right .auth-toggle-row {
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* Ensure the main title also aligns to the right edge */
+.auth-form-card.align-right .auth-main-title {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Standard Input Styling to match your width */
+.auth-input {
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't break alignment */
+  margin-bottom: 15px;
+  /* ... your other styles ... */
+}
+
+/* --- SHARED AUTH CONTAINER --- */
+.auth-container {
+  width: 100%;
+  padding: 5% 10%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.5s ease;
+}
+
+/* --- RIGHT ALIGNMENT LOGIC (Create Account View) --- */
+.auth-container.align-right {
+  align-items: flex-end; /* Pushes everything to the right edge */
+  text-align: right;
+}
+
+/* Flips the Logo and Text so the Circle is on the far right */
+.auth-container.align-right .auth-brand {
+  flex-direction: row-reverse; 
+  gap: 15px;
+}
+
+/* Pushes the 'Already have an account?' row to the right */
+.auth-container.align-right .auth-toggle-row {
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* Ensure the title is flush with the right edge */
+.auth-container.align-right .auth-main-title {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Input boxes must be 100% of their container to align edges */
+.auth-form-card {
+  width: 100%;
+  max-width: 450px; /* Matches the width of your text boxes */
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- ALIGNMENT WRAPPER --- */
+.auth-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 450px; /* This defines the 'edge' everything aligns to */
+}
+
+/* --- RIGHT ALIGNMENT (Create Account View) --- */
+.auth-container.align-right {
+  align-items: flex-end; /* Pushes the wrapper and its contents to the right */
+  text-align: right;
+}
+
+/* This flips the logo and text so the circle is on the outer right edge */
+.auth-container.align-right .auth-brand {
+  flex-direction: row-reverse;
+  gap: 15px;
+  justify-content: flex-start;
+}
+
+/* Forces the question row to the right edge */
+.auth-container.align-right .auth-toggle-row {
+  justify-content: flex-end;
+  width: 100%;
+}
+
+/* Forces Title to be flush right */
+.auth-container.align-right .auth-main-title {
+  text-align: right;
+  width: 100%;
+}
+
+/* Ensure inputs take up full width of the 450px wrapper */
+.auth-input, .auth-submit-btn, .social-auth-btn {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* --- UNIFIED ALIGNMENT WRAPPER --- */
+.auth-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 450px; /* This sets the vertical 'line' everything hits */
+}
+
+/* --- RIGHT ALIGNMENT (Create Account View) --- */
+.auth-container.align-right {
+  align-items: flex-end; /* Pushes the entire wrapper to the right */
+}
+
+/* Fix Logo Alignment: Puts circle on the far right edge */
+.auth-container.align-right .auth-brand {
+  flex-direction: row-reverse; /* Circle to the right of 'Logo Name' */
+  justify-content: flex-start;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Fix Question Row Alignment */
+.auth-container.align-right .auth-toggle-row {
+  justify-content: flex-end;
+  width: 100%;
+  text-align: right;
+}
+
+/* Fix Title Alignment */
+.auth-container.align-right .auth-main-title {
+  text-align: right;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Ensure inputs take up full width of the wrapper */
+.auth-input, .auth-submit-btn, .social-auth-btn {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@keyframes wave-drift {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.02) translateY(10px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+.auth-organic-shape {
+  animation: wave-drift 10s infinite ease-in-out;
+}
