@@ -48,9 +48,8 @@ body, html, #root {
 
 .ofw-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
-/* Fix for the Search Box and Input */
 .search-wrapper {
-  background: #fff; /* Ensures the container is white */
+  background: #fff; 
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 10px 15px;
@@ -61,15 +60,14 @@ body, html, #root {
 }
 
 .search-wrapper input {
-  border: none !important;      /* Removes the default black border */
-  outline: none !important;     /* Removes the black highlight when clicking */
-  background: transparent !important; /* Removes any default background color */
+  border: none !important;     
+  outline: none !important;    
+  background: transparent !important;
   width: 100%;
   padding-left: 10px;
-  color: #000;                  /* Ensures the text you type is black */
+  color: #000;                 
 }
 
-/* Removes the focus ring that some browsers (like Chrome) add */
 .search-wrapper input:focus {
   outline: none;
   border: none;
@@ -77,14 +75,14 @@ body, html, #root {
 }
 .profile-wrapper { 
   display: flex; 
-  align-items: center; /* Vertically centers the text with the circle */
+  align-items: center; 
   gap: 15px; 
 }
 
 .profile-info { 
   text-align: right; 
   display: flex; 
-  flex-direction: column; /* Keeps Name above Status */
+  flex-direction: column; 
 }
 
 .profile-name { 
@@ -101,8 +99,7 @@ body, html, #root {
   height: 50px; 
   background: #D9D9D9; 
   border-radius: 50%; 
-  flex-shrink: 0; /* Prevents circle from squishing */
-}
+  flex-shrink: 0; }
 
 .dashboard-frame { border: 1px solid #D9D9D9; border-radius: 15px; padding: 30px; min-height: 80vh; }
 
@@ -119,15 +116,13 @@ body, html, #root {
 }
 
 .hero-content h1 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 15px; }
-/* Update this specific class in your OfwDashboard.css */
+
 .register-btn {
   background: #fff;
   border: none;
   padding: 12px 30px;
   border-radius: 10px;
   font-weight: 900;
-  
-  /* Increased from 15px to 35px to move it down */
   margin-top: 35px; 
   
   cursor: pointer;
@@ -135,31 +130,26 @@ body, html, #root {
   transition: transform 0.2s ease;
 }
 
-/* Optional: Subtle lift effect when you hover over it */
 .register-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-/* OVERLAPPING CIRCLES WITH BOLDER STROKES */
 .hero-graphics { 
   position: relative; 
   width: 320px; 
   height: 100%; 
-  opacity: 0.8; /* Makes the overlap details pop */
+  opacity: 0.8; 
 }
 
 .circle {
   position: absolute;
-  /* INCREASED BORDER: Changed from 2px to 4px or 5px for boldness */
   border: 4.5px solid #9A9A9A; 
   border-radius: 50%;
   background: transparent;
-  /* ADDED SHADOW: Gives the circles more dimension as seen in your reference */
   filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
 }
 
-/* Precise positioning to match your latest design screenshot */
 .circle-1 { width: 230px; height: 230px; right: -50px; top: -30px; }
 .circle-2 { width: 150px; height: 150px; right: 130px; top: 10px; }
 .circle-3 { width: 90px; height: 90px; right: 240px; top: 80px; }
@@ -176,7 +166,6 @@ body, html, #root {
 .card-content { background: #D9D9D9; margin: 30px; padding: 30px; border-radius: 15px; width: 320px; }
 .status-tag { background: #BDBDBD; padding: 5px 15px; border-radius: 8px; font-weight: 900; margin-bottom: 15px; display: inline-block; }
 
-/* Sidebar Button Styling */
 .nav-btn {
   display: flex;
   align-items: center;
@@ -187,18 +176,16 @@ body, html, #root {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 800; /* Bold text from your screenshot */
+  font-weight: 800; 
   font-size: 1.1rem;
   transition: all 0.2s ease;
   text-align: left;
 }
 
-/* Hover Effect: Changes color when mouse points at it */
 .nav-btn:hover {
   background-color: #DCDCDC;
 }
 
-/* Active State: The grey highlight for the selected page */
 .nav-btn.active {
   background-color: #D1D1D1;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
@@ -210,12 +197,10 @@ body, html, #root {
   align-items: center;
 }
 
-/* Positioning for Settings/Log Out at the bottom */
 .settings-group {
   margin-top: auto;
 }
 
-/* Alignment fix for Header Profile */
 .profile-wrapper {
   display: flex;
   align-items: center;
@@ -225,7 +210,6 @@ body, html, #root {
 .form-main-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 30px; }
 .form-container-split { display: flex; gap: 50px; align-items: flex-start; }
 
-/* Progress Steps Styling */
 .form-steps-sidebar { display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .step-item { 
   background: #f0f0f0; padding: 10px 20px; border-radius: 8px; width: 180px; 
@@ -234,7 +218,6 @@ body, html, #root {
 .step-item.active { background: #fff; border: 1px solid #ddd; }
 .step-line { width: 15px; height: 40px; background: #9A9A9A; }
 
-/* The Form Card Styling */
 .form-card { flex: 1; background: #f9f9f9; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 .form-header-strip { background: #D9D9D9; padding: 15px; text-align: center; font-weight: 800; border-bottom: 1px solid #ccc; }
 .form-body { padding: 40px; display: flex; flex-direction: column; gap: 20px; }
@@ -248,7 +231,6 @@ body, html, #root {
   margin-top: 20px; width: 350px; align-self: center;
 }
 
-/* REGISTRATION VIEW STYLES */
 .registration-view {
   animation: fadeIn 0.3s ease-in;
 }
@@ -265,7 +247,6 @@ body, html, #root {
   align-items: flex-start;
 }
 
-/* Vertical Steps */
 .steps-sidebar {
   display: flex;
   flex-direction: column;
@@ -276,7 +257,7 @@ body, html, #root {
   width: 200px;
   padding: 15px;
   background: #F0F0F0;
-  border: none; /* Removes default button border */
+  border: none; 
   border-radius: 10px;
   text-align: center;
   font-size: 13px;
@@ -288,8 +269,8 @@ body, html, #root {
 
 .step-card-btn.active {
   background: #fff;
-  border: 1px solid #3498db; /* Highlights the current step */
-  transform: scale(1.05); /* Slightly bigger when active */
+  border: 1px solid #3498db; 
+  transform: scale(1.05);
 }
 
 .step-card-btn:hover {
@@ -307,7 +288,6 @@ body, html, #root {
   background: #A0A0A0;
 }
 
-/* Form Card */
 .registration-form-card {
   flex: 1;
   background: #fff;
@@ -397,16 +377,16 @@ body, html, #root {
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   display: flex;
-  align-items: center; /* Vertical centering */
-  justify-content: center; /* Horizontal centering */
+  align-items: center;
+  justify-content: center; 
   padding: 0 20px;
 }
 
-/* THE ROW: Standardizes the alignment of tag and text */
+
 .appointment-row {
   display: flex;
-  align-items: center; /* Magic property for vertical centering */
-  gap: 15px; /* Space between the tag and the text */
+  align-items: center; 
+  gap: 15px; 
 }
 
 .notice-tag {
@@ -426,11 +406,11 @@ body, html, #root {
   margin: 0;
 }
 
-/* VERIFICATION OVERLAY STYLES */
+
 .verification-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+  background: rgba(255, 255, 255, 0.9); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -472,7 +452,7 @@ body, html, #root {
 
 .link-text { font-weight: 800; color: #000; cursor: pointer; }
 
-/* THE OPEN EMAIL BUTTON */
+
 .open-email-btn {
   background: #7A7A7A;
   color: white !important;
@@ -489,7 +469,7 @@ body, html, #root {
 
 .open-email-btn:hover { background: #666; }
 
-/* UPLOAD VIEW STYLES */
+
 .upload-grid {
   display: flex;
   gap: 20px;
@@ -508,7 +488,6 @@ body, html, #root {
   font-size: 14px;
 }
 
-/* THE DRAG & DROP ZONE */
 .drag-zone {
   border: 2px dashed #9A9A9A;
   background: #F8F8F8;
@@ -541,7 +520,6 @@ body, html, #root {
   text-decoration: underline;
 }
 
-/* Reusing your existing button style for consistency */
 .next-step-btn {
   background: #7A7A7A;
   color: white !important;
@@ -567,23 +545,22 @@ body, html, #root {
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.2rem;
-  pointer-events: none; /* VERY IMPORTANT: Allows clicks to pass through to the input */
+  pointer-events: none; 
   opacity: 0.6;
 }
 
-/* Optional: Style for the date picker once it appears */
+
 .reg-input[type="date"] {
   font-family: sans-serif;
   text-transform: uppercase;
 }
 
-/* Color fix for Select and Placeholders */
 .reg-select {
-  color: #757575 !important; /* Matches the placeholder grey */
+  color: #757575 !important;
   cursor: pointer;
 }
 
-/* Switches back to black once a real option is selected */
+
 .reg-select option {
   color: #000 !important;
 }
@@ -610,10 +587,9 @@ body, html, #root {
   margin-bottom: 30px;
 }
 
-/* This is the key to centering the button */
 .centered-btn {
   align-self: center; 
-  width: 350px; /* Fixed width for the button */
+  width: 350px; 
   margin-top: 10px;
   background: #7A7A7A;
   color: white !important;
@@ -630,7 +606,7 @@ body, html, #root {
   transform: translateY(-2px);
 }
 
-/* APPOINTMENT BOOKING STYLES */
+
 .appointment-selection-card {
   background: #fff;
   border: 1px solid #ddd;
@@ -680,7 +656,6 @@ body, html, #root {
   border-top: 1px solid #eee;
 }
 
-/* THE MINI BOOK BUTTON */
 .inner-book-btn {
   background: #EEEEEE;
   border: 1px solid #ddd;
@@ -696,20 +671,20 @@ body, html, #root {
   margin-top: 20px;
 }
 
-/* FORM BODY ALIGNMENT */
+
 .form-body {
   padding: 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  align-items: center; /* Centers everything horizontally */
+  align-items: center; 
   background: #f9f9f9;
 }
 
-/* UNIVERSAL CENTERED BUTTON STYLE */
+
 .centered-btn {
-  align-self: center; /* Ensures the button itself centers in a flex column */
-  width: 380px; /* Standardized width from your screenshots */
+  align-self: center; 
+  width: 380px; 
   background: #7A7A7A;
   color: white !important;
   padding: 18px;
@@ -720,10 +695,8 @@ body, html, #root {
   cursor: pointer;
   margin-top: 20px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  display: block; /* Ensures it behaves as a block for centering */
-}
+  display: block; }
 
-/* SUCCESS MESSAGE CENTERING */
 .success-message {
   text-align: center;
   display: flex;
@@ -740,14 +713,14 @@ body, html, #root {
 }
 
 .success-circle {
-  background: #4CAF50 !important; /* Green background for the final completion emoji */
+  background: #4CAF50 !important;
 }
 
 .success-pop h2{ 
-  color: #2E7D32; /* Darker green text */
+  color: #2E7D32; 
 }
 
-/* Summary Receipt Styles */
+
 .summary-details {
   background: #f4f4f4;
   padding: 20px;
@@ -766,13 +739,13 @@ body, html, #root {
 
 .reminder-text {
   font-size: 12px !important;
-  color: #d9534f !important; /* Soft red for warning */
+  color: #d9534f !important; 
   font-weight: 800;
   margin-top: 10px;
   line-height: 1.4;
 }
 
-/* Horizontal Button Group */
+
 .popup-button-group {
   display: flex;
   gap: 12px;
@@ -781,43 +754,42 @@ body, html, #root {
 }
 
 .secondary-btn {
-  background: #BDBDBD !important; /* Neutral grey for the print button */
+  background: #BDBDBD !important;
 }
 
 .success-circle {
-  background: #4CAF50 !important; /* Success Green */
+  background: #4CAF50 !important;
 }
 
 .slots-table-container {
   border: 1px solid #eee;
   border-radius: 10px;
   overflow: hidden;
-  min-height: 200px; /* Ensures the card doesn't shrink when empty */
+  min-height: 200px;
   background: #fff;
 }
 
 .slots-table tr:hover {
-  background-color: #fcfcfc; /* Subtle highlight for the selected row */
+  background-color: #fcfcfc; 
 }
 
 .inner-book-btn:active {
-  background-color: #d0d0d0; /* Feedback when clicked */
+  background-color: #d0d0d0;
 }
 
-/* Checkbox Styling */
+
 .slot-checkbox {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: #7A7A7A; /* Matches your button theme */
+  accent-color: #7A7A7A;
 }
 
-/* Highlight the row when selected */
 .selected-row {
   background-color: #f0f0f0;
 }
 
-/* Style for when no slot is selected yet */
+
 .disabled-btn {
   background-color: #BDBDBD !important;
   cursor: not-allowed;
@@ -829,7 +801,6 @@ body, html, #root {
   vertical-align: middle;
 }
 
-/* VERIFICATION MODAL ENHANCEMENTS */
 .custom-verify-modal {
   max-width: 550px;
   position: relative;
@@ -849,7 +820,6 @@ body, html, #root {
   color: #333;
 }
 
-/* THE BUTTON STYLES FOR TEXT ACTIONS */
 .text-action-btn {
   background: none;
   border: none;
@@ -866,7 +836,6 @@ body, html, #root {
   text-decoration: underline;
 }
 
-/* INNER CHANGE EMAIL MODAL */
 .inner-modal-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;

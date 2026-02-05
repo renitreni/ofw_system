@@ -10,7 +10,7 @@ const OfwDashboard = () => {
   const [selectedSession, setSelectedSession] = useState("");
   const [selectedSlotId, setSelectedSlotId] = useState(null);
 
-  // New states for interactive email actions
+
   const [isChangingEmail, setIsChangingEmail] = useState(false);
   const [newEmail, setNewEmail] = useState("");
 
@@ -31,7 +31,7 @@ const OfwDashboard = () => {
 
   return (
     <div className="ofw-container">
-      {/* SIDEBAR (Unchanged) */}
+      {}
       <aside className="ofw-sidebar">
         <div className="sidebar-brand">
           <div className="logo-icon">🐋</div>
@@ -59,7 +59,7 @@ const OfwDashboard = () => {
         </header>
 
         <div className="dashboard-frame">
-          {/* UPDATED EMAIL VERIFICATION MODAL */}
+          {}
           {isVerifying && (
             <div className="verification-overlay">
               <div className="verify-card custom-verify-modal">
@@ -84,7 +84,7 @@ const OfwDashboard = () => {
                   </p>
                 </div>
 
-                {/* NESTED CHANGE EMAIL POP-UP */}
+                {}
                 {isChangingEmail && (
                   <div className="inner-modal-overlay">
                     <div className="inner-modal-card">
@@ -107,7 +107,7 @@ const OfwDashboard = () => {
             </div>
           )}
 
-          {/* FINAL COMPLETION POP-UP (Unchanged) */}
+          {}
           {isBookingComplete && (
             <div className="verification-overlay">
               <div className="verify-card success-pop">
@@ -164,7 +164,7 @@ const OfwDashboard = () => {
                           <input type="text" placeholder="Birthdate" className="reg-input" onFocus={(e) => (e.target.type = "date")} onBlur={(e) => { if (!e.target.value) e.target.type = "text"; }} />
                           <span className="calendar-icon">🗓️</span>
                         </div>
-                        <select className="reg-input reg-select" defaultValue=""><option value="" disabled className="placeholder-option">Civil Status</option><option value="single">Single</option><option value="married">Married</option></select>
+                        <select className="reg-input reg-select" defaultValue=""><option value="" disabled className="placeholder-option">Civil Status</option><option value="single">Single</option><option value="married">Married</option><option value="widowed">Widowed</option><option value="separated">Separated</option></select>
                         <input type="text" placeholder="Emergency Contact" className="reg-input" />
                         <button className="next-step-btn centered-btn" onClick={() => setRegStep('Upload Documents')}>Next</button>
                       </>
