@@ -1,0 +1,89 @@
+.agency-container { padding: 20px; }
+
+.page-header h2 { margin-bottom: 5px; }
+
+.agency-tabs {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.agency-tab {
+    padding: 8px 16px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+.agency-tab.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* GRID */
+.agency-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* CARD */
+.agency-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status.active { background: #dcfce7; color: #16a34a; }
+
+.license { color: #64748b; margin: 8px 0; }
+
+.rating { color: #facc15; margin-bottom: 8px; }
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.view-btn {
+    flex: 1;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.block-btn {
+    flex: 1;
+    background: red;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+}

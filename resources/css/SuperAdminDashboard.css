@@ -1,0 +1,170 @@
+.dashboard-container {
+    padding: 24px 0;
+}
+
+/* HEADER */
+.dashboard-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.dashboard-header p {
+    color: #6b7280;
+    font-size: 15px;
+}
+
+/* GRID */
+.stats-grid {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* CARD */
+.stat-card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.stat-title {
+    font-size: 15px;
+    color: #374151;
+}
+
+.stat-card h3 {
+    font-size: 32px;
+    margin-top: 6px;
+}
+
+/* ICON */
+.stat-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon svg {
+    width: 26px;
+    height: 26px;
+}
+
+/* COLORS */
+.blue {
+    color: #2563eb;
+    background: #e0ecff;
+}
+
+.green {
+    color: #16a34a;
+    background: #dcfce7;
+}
+
+.red {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.purple {
+    color: #9333ea;
+    background: #f3e8ff;
+}
+
+.orange {
+    color: #ea580c;
+    background: #ffedd5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+
+.lower-grid {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    margin-bottom: 15px;
+}
+
+/* Activity */
+.activity-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.activity-list li {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.activity-list p {
+    font-size: 13px;
+    color: gray;
+    margin: 3px 0 0;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-top: 6px;
+}
+
+.dot.blue { background: #2563eb; }
+
+/* Attention */
+.attention-box {
+    border: 1px solid #fca5a5;
+    background: #fff5f5;
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.red-text {
+    color: red;
+    font-size: 14px;
+}
+
+.view-link {
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}

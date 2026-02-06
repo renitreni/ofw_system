@@ -1,0 +1,166 @@
+/* PAGE */
+.container {
+  padding: 30px;
+  background: #f6f8fc;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.page-header h2 {
+  font-weight: 700;
+  font-size: 26px;
+  margin-bottom: 4px;
+}
+
+.page-header p {
+  color: #6b7280;
+  margin-bottom: 25px;
+}
+
+/* SEARCH */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: white;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  margin-bottom: 22px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* TABS */
+.agency-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+
+.agency-tab {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  transition: 0.2s ease;
+}
+
+.agency-tab:hover {
+  background: #eef2ff;
+}
+
+.agency-tab.active {
+  background: #1e66ff;
+  color: white;
+  border-color: #1e66ff;
+  box-shadow: 0 4px 10px rgba(30,102,255,0.3);
+}
+
+/* TABLE CARD STYLE */
+.table-wrapper {
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* TABLE */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table thead {
+  background: #f9fafb;
+}
+
+.custom-table th {
+  text-align: left;
+  padding: 16px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #6b7280;
+}
+
+.custom-table td {
+  padding: 16px;
+  border-top: 1px solid #f1f1f1;
+  vertical-align: middle;
+}
+
+/* OFW CELL */
+.ofw-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ofw-name {
+  font-weight: 600;
+}
+
+.ofw-job {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* STATUS BADGES */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.processing {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-badge.suspended {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* VIEW BUTTON */
+.view-btn {
+  background: linear-gradient(135deg, #1e66ff, #0047ff);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s ease;
+}
+
+.view-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(30,102,255,0.3);
+}
