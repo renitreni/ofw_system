@@ -1,11 +1,11 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import 'bootstrap/dist/css/bootstrap.min.css'; // MUST BE HERE
+import 'bootstrap/dist/css/bootstrap.min.css'; 
 import './index.css'
-import AdminDashboard from './adminDashboard'
+import OfwDashboard from './OfwDashboard'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AdminDashboard />
+    <OfwDashboard />
   </StrictMode>,
 )
