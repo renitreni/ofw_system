@@ -872,3 +872,358 @@ body, html, #root {
 
 .cancel-btn { background: #ddd; }
 .confirm-btn { background: #7A7A7A; color: white !important; }
+
+/* Base style for the connector */
+.step-connector {
+  width: 12px;
+  height: 40px; 
+  background-color: #A9A9A9; /* Default Gray */
+  margin: 0 auto;
+  transition: background-color 0.4s ease; /* Smooth transition */
+}
+
+/* Green state for completed steps */
+.step-connector.completed {
+  background-color: #28a745 !important; /* Green */
+}
+
+/* Optional: Active button highlight */
+.step-card-btn.active {
+  border: 2px solid #28a745;
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.2);
+}
+
+/* Emergency Container Layout */
+.emergency-container {
+  padding: 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+.emergency-header-alert {
+  background-color: #fff5f5;
+  border-left: 5px solid #dc3545;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  margin-bottom: 25px;
+}
+
+.warning-icon { font-size: 2rem; margin-right: 15px; }
+
+/* The SOS Pulse Button */
+.sos-button {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: #dc3545;
+  color: white;
+  border: 10px solid #f8d7da;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  animation: pulse-red 2s infinite;
+  transition: transform 0.2s ease;
+}
+
+.sos-button:active { transform: scale(0.9); }
+
+@keyframes pulse-red {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 20px rgba(220, 53, 69, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+}
+
+/* Hotline & Vault Styles */
+.hotline-list { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+.hotline-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.vault-grid { display: flex; gap: 10px; margin-top: 10px; }
+.doc-chip {
+  background: #e9ecef;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  border: 1px solid #dee2e6;
+}
+
+.panic-card {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  border: 1px solid #eee;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* SOS & Location Toggle */
+.location-toggle-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 20px;
+  text-align: left;
+}
+
+/* Silent Signal */
+.emergency-sub-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid #eee;
+  text-align: left;
+  height: 100%;
+}
+
+.quick-msg-chips { display: flex; gap: 8px; margin-bottom: 10px; }
+.quick-msg-chips button {
+  font-size: 0.75rem;
+  padding: 5px 12px;
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+#silentInput {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.send-silent-btn {
+  width: 100%;
+  background: #333;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Safe Havens Mock Map */
+.mock-map-view {
+  height: 140px;
+  background: #e9ecef;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.map-placeholder { color: #888; font-style: italic; }
+
+.haven-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.85rem;
+}
+
+/* Switch Toggle CSS */
+.switch { position: relative; display: inline-block; width: 45px; height: 24px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; }
+input:checked + .slider { background-color: #28a745; }
+input:checked + .slider:before { transform: translateX(21px); }
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+/* Container & Animation */
+.aesthetic-fade { opacity: 0; animation: fadeIn 0.5s forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Emergency Alert */
+.aesthetic-alert {
+  background: #fff5f5; border-left: 4px solid #ff4d4d;
+  padding: 15px 20px; border-radius: 12px; display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+}
+
+/* Emergency Grid */
+.emergency-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* Clean Aesthetic Cards */
+.aesthetic-card {
+  background: #fff; border: 1px solid #edf2f7; border-radius: 20px;
+  padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+/* SOS Button - Clean Style */
+.sos-button-clean {
+  width: 130px; height: 130px; border-radius: 50%;
+  background: #fff; color: #ff4d4d; border: 4px solid #ff4d4d;
+  font-size: 1.4rem; font-weight: 800; cursor: pointer;
+  transition: all 0.3s ease; margin: 20px 0;
+}
+.sos-button-clean:hover { background: #ff4d4d; color: #fff; transform: scale(1.05); }
+
+/* SOS Pulse Effect */
+.sos-pulse-ring {
+  width: 60px; height: 60px; background: rgba(255, 77, 77, 0.2);
+  border-radius: 50%; margin: 0 auto 15px;
+  animation: pulse-ring 1.5s infinite;
+}
+@keyframes pulse-ring { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(2); opacity: 0; } }
+
+/* Location Toggle */
+.location-toggle-aesthetic {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #f8fafc; padding: 15px; border-radius: 15px;
+}
+.live-dot-pulse { font-size: 0.75rem; color: #48bb78; animation: blink 1s infinite alternate; }
+@keyframes blink { from { opacity: 1; } to { opacity: 0.4; } }
+
+/* Switch Style */
+.switch-clean { position: relative; width: 44px; height: 22px; }
+.switch-clean input { opacity: 0; width: 0; height: 0; }
+.slider-clean { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e0; transition: .4s; border-radius: 34px; }
+.slider-clean:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider-clean { background-color: #48bb78; }
+input:checked + .slider-clean:before { transform: translateX(22px); }
+
+/* Map Sample UI */
+.aesthetic-map-sample {
+  height: 160px; background: #f1f5f9; border-radius: 15px;
+  position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.user-location-ping {
+  width: 12px; height: 12px; background: #3182ce; border-radius: 50%;
+  animation: map-ping 1.5s infinite;
+}
+@keyframes map-ping { 0% { box-shadow: 0 0 0 0px rgba(49, 130, 206, 0.5); } 100% { box-shadow: 0 0 0 20px rgba(49, 130, 206, 0); } }
+
+.map-marker-clean {
+  position: absolute; top: 20px; right: 20px; background: #fff;
+  padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+}
+
+/* Silent Signal Textarea */
+.aesthetic-textarea {
+  width: 100%; border: 1px solid #e2e8f0; border-radius: 12px;
+  padding: 12px; font-size: 0.9rem; outline: none; transition: 0.3s;
+}
+.aesthetic-textarea:focus { border-color: #3182ce; }
+
+.chip-outline {
+  background: #fff; border: 1px solid #e2e8f0; padding: 5px 12px;
+  border-radius: 20px; font-size: 0.75rem; cursor: pointer; margin-right: 5px;
+}
+.chip-outline:hover { background: #f8fafc; }
+
+.send-btn-outline {
+  background: #fff; border: 1.5px solid #2d3748; padding: 10px;
+  border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s;
+}
+.send-btn-outline:hover { background: #2d3748; color: #fff; }
+
+.doc-tag-clean { background: #f1f5f9; padding: 6px 15px; border-radius: 20px; font-size: 0.75rem; color: #4a5568; font-weight: 500; }
+.hotline-pill-clean {
+  width: 100%; background: #fff; border: 1px solid #e2e8f0; padding: 10px 15px;
+  border-radius: 12px; display: flex; justify-content: space-between; font-size: 0.85rem; cursor: pointer;
+}
+
+/* Document Buttons */
+.doc-tag-btn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.doc-tag-btn:hover {
+  background: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+/* Hotlines */
+.hotline-pill-clean {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 10px 15px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.hotline-pill-clean:hover {
+  background: #f8fafc;
+  border-color: #cbd5e0;
+}
+
+.call-icon-red {
+  color: #ef4444; /* Emergency Red Phone */
+  font-size: 1rem;
+}
+
+/* Location Ping Animation */
+.user-location-ping {
+  width: 12px;
+  height: 12px;
+  background: #3182ce;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0px rgba(49, 130, 206, 0.5);
+  animation: map-ping 1.5s infinite;
+}
+
+@keyframes map-ping {
+  0% { box-shadow: 0 0 0 0px rgba(49, 130, 206, 0.5); }
+  100% { box-shadow: 0 0 0 20px rgba(49, 130, 206, 0); }
+}
+
+.avatar-ripple {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #3b82f6;
+  border-radius: 50%;
+  animation: ripple 2s infinite;
+}
+
+@keyframes ripple {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.dot-pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  animation: dot-blink 1s infinite alternate;
+  margin-right: 5px;
+}
+
+@keyframes dot-blink {
+  from { opacity: 1; }
+  to { opacity: 0.3; }
+}
