@@ -1,44 +1,64 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
 
 export default function SignUp() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
-    const [role, setRole] = useState("Ofw"); // default role
+    const [role, setRole] = useState("Ofw");
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Frontend validation
+        if (!name.trim() || !email.trim() || !password || !passwordConfirmation) {
+            alert("Please fill out all required fields.");
+            return;
+        }
+
+        if (password !== passwordConfirmation) {
+            alert("Password and confirmation do not match.");
+            return;
+        }
+
+        setLoading(true);
+
         try {
             const res = await fetch("/api/register", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     name,
                     email,
                     password,
                     password_confirmation: passwordConfirmation,
-                    role
+                    role,
                 }),
             });
 
             const data = await res.json();
 
             if (!res.ok) {
-                alert(data.message || "Registration failed");
+                // Show all validation errors
+                if (data.errors) {
+                    const messages = Object.values(data.errors).flat().join("\n");
+                    alert(messages);
+                } else {
+                    alert(data.message || "Registration failed");
+                }
+                setLoading(false);
                 return;
             }
 
             alert("Registration successful! You can now login.");
-            window.location.href = "/login"; // redirect to login
+            window.location.href = "/login";
+
         } catch (err) {
             console.error(err);
-            alert("Something went wrong");
+            alert("Something went wrong. Try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -50,7 +70,6 @@ export default function SignUp() {
                         <h4 className="text-center mb-4 fw-bold">Sign Up</h4>
 
                         <form onSubmit={handleSubmit}>
-                            {/* Name */}
                             <div className="mb-3">
                                 <label className="form-label">Full Name</label>
                                 <input
@@ -63,7 +82,6 @@ export default function SignUp() {
                                 />
                             </div>
 
-                            {/* Email */}
                             <div className="mb-3">
                                 <label className="form-label">Email address</label>
                                 <input
@@ -76,7 +94,6 @@ export default function SignUp() {
                                 />
                             </div>
 
-                            {/* Password */}
                             <div className="mb-3">
                                 <label className="form-label">Password</label>
                                 <input
@@ -89,7 +106,6 @@ export default function SignUp() {
                                 />
                             </div>
 
-                            {/* Password Confirmation */}
                             <div className="mb-3">
                                 <label className="form-label">Confirm Password</label>
                                 <input
@@ -102,7 +118,6 @@ export default function SignUp() {
                                 />
                             </div>
 
-                            {/* Role */}
                             <div className="mb-3">
                                 <label className="form-label">Role</label>
                                 <select
@@ -111,16 +126,15 @@ export default function SignUp() {
                                     onChange={(e) => setRole(e.target.value)}
                                     required
                                 >
-                                    <option value="SuperAdmin">Admin (Agency)</option>
+                                    <option value="Agency">Agency</option>
                                     <option value="Agent">Agent</option>
                                     <option value="Ofw">OFW</option>
                                 </select>
                             </div>
 
-                            {/* Sign Up Button */}
                             <div className="d-grid mb-3">
-                                <button type="submit" className="btn btn-success">
-                                    Sign Up
+                                <button type="submit" className="btn btn-success" disabled={loading}>
+                                    {loading ? "Signing Up..." : "Sign Up"}
                                 </button>
                             </div>
 

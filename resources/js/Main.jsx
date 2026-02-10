@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/app.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -11,6 +13,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import AgentPage from './pages/AgentPage';
 import OfwPage from './pages/OfwPage';
 import SignUp from "./pages/SignUp";
+
 
 export default function Main() {
     return (
@@ -25,6 +28,7 @@ export default function Main() {
                 <Route path="/ofw/home" element={<OfwPage />} />
                 <Route path="/register" element={<SignUp />} />
             </Routes>
+
         </BrowserRouter>
     )
 }
