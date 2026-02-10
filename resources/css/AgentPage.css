@@ -1,0 +1,262 @@
+
+
+/*header images*/
+.dashboard-header {
+  position: relative;
+  width: 100%;
+  height: 250px; /* adjust as needed */
+}
+
+.header-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+
+  /* Image animation */
+  opacity: 0;
+  transform: scale(1.05);
+  animation: fadeInZoom 1s forwards;
+}
+
+.header-text {
+  position: absolute;
+  left: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 165, 0, 0.7); /* orange overlay */
+  padding: 40px 30px;
+  border-radius: 20px;
+  max-width: 280px;
+}
+
+.header-text h2 {
+  font-size: 42px;
+  font-weight: bold;
+  color: #3b2b00; /* dark brown text like screenshot */
+  line-height: 1.2;
+}
+
+.header-text span {
+  display: block; /* makes text stacked vertically */
+}
+
+
+/* Keyframes */
+@keyframes fadeInZoom {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInText {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+
+
+
+/* SMALL AVATAR */
+.avatar-sm {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  border-radius: 10px;
+}
+
+.sidebar-icon {
+  width: 30px;
+  height: 25px;
+  object-fit: contain;
+}
+
+
+/* MAIN AVATAR */
+.avatar {
+  width: 50px;
+  height: 50px;
+  background: orange;
+  color: white;
+  font-weight: bold;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ENTRY ANIMATIONS */
+.animate-enter {
+  animation: fadeSlide 0.6s ease forwards;
+}
+
+.animate-delay {
+  opacity: 0;
+  animation: fadeSlide 0.6s ease forwards;
+  animation-delay: 0.2s;
+}
+
+.animate-delay-2 {
+  opacity: 0;
+  animation: fadeSlide 0.6s ease forwards;
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* TAB FADE */
+.tab-content {
+  animation: tabFade 0.35s ease;
+}
+
+@keyframes tabFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ALL CONTRACT CARDS */
+.contract-card {
+  /* Glass background */
+  background: rgba(255, 255, 255, 0.546) !important;
+
+  /* Glass blur */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  /* Soft border */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+
+  /* Remove Bootstrap junk */
+  box-shadow: none !important;
+
+  /* Spacing */
+  padding: 16px;
+  margin-bottom: 16px;
+
+  /* Smooth interaction */
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+
+
+
+/* DASHBOARD CONTRACTS CONTAINER */
+.contracts-container {
+  background: rgba(255, 255, 255, 0.5) !important;
+
+  -webkit-backdrop-filter: blur(12px); /* vendor-prefixed FIRST */
+  backdrop-filter: blur(12px);         /* standard AFTER */
+
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+
+
+/* CONTENT WRAPPER */
+.content {
+  background-color: transparent;
+}
+
+
+
+
+.contract-card:hover {
+  transform: scale(1.01);
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 70px; /* collapsed by default */
+  background: rgba(232, 234, 237, 0.7);
+  color: #fff;
+  min-height: 100vh;
+  padding: 15px;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.sidebar.open {
+  width: 230px; /* expanded instantly */
+}
+
+.sidebar .nav-link {
+  color: black;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.sidebar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* ADMIN PROFILE */
+.admin-profile {
+  text-align: center;
+}
+
+.agent-user {
+    color: black
+}
+
+.admin-profile img {
+  width: 60px;
+  height: 60px;
+}
+
+/* MAIN CONTENT */
+.content {
+  background: #5B8D33;
+  min-height: 100vh;
+}
+
+/* STAT BOXES */
+.stat-box {
+  padding: 20px;
+  border-radius: 16px;
+  color: #fff;
+  text-align: center;
+}
+
+.stat-box h3 {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+/* STATUS COLORS */
+.stat-box.pending {
+  background: #f59e0b;
+}
+
+.stat-box.verified {
+  background: #22c55e;
+}
+
+.stat-box.rejected {
+  background: #ef4444;
+}

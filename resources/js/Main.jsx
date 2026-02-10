@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import SuperAdmin from './pages/SuperAdmin';
 import AdminDashboard from './pages/AdminDashboard';
 import AgentPage from './pages/AgentPage';
+import ContractDetails from './pages/ContractDetails';
 import OfwPage from './pages/OfwPage';
 import SignUp from "./pages/SignUp";
 
@@ -52,7 +53,15 @@ export default function Main() {
 
 
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                {/*Agent*/}
                 <Route path="/agent/dashboard" element={<AgentPage />} />
+                 <Route path="/agent/pending" element={<AgentPage />} />
+                 <Route path="/agent/processed" element={<AgentPage />} />   
+                  <Route path="/agent/rejected" element={<AgentPage />} />
+                 <Route path="/agent/contracts/:id" element={<ContractDetails />} />
+
+
+
                 <Route path="/ofw/home" element={<OfwPage />} />
                 <Route path="/register" element={<SignUp />} />
             </Routes>
