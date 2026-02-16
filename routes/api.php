@@ -92,3 +92,5 @@ Route::post('/documents/upload', [OfwDocumentController::class, 'upload']);
 Route::get('/documents/{ofwId}', [OfwDocumentController::class, 'getDocuments']);
 
 Route::post('/save-registration-progress', [RegistrationProgressController::class, 'save']);
+
+Route::get('/ping', fn() => ['status' => 'ok']);
