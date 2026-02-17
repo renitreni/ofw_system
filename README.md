@@ -21,6 +21,38 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
+## Docker (Nginx + PHP-FPM + MySQL)
+
+### Prerequisites
+
+- Docker Desktop for macOS or Windows
+
+### Setup
+
+1. Copy the environment file.
+
+2. Build and start the containers.
+
+3. Install dependencies and build assets inside the container (required when bind-mounting the project).
+
+4. Generate the app key and run migrations.
+
+### Commands
+
+```
+cp .env.example .env
+docker compose up -d --build
+docker compose exec app composer install
+docker compose exec app npm install
+docker compose exec app npm run build
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate
+```
+
+### Access
+
+Open http://localhost:8080
+
 ## Learning Laravel
 
 Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
