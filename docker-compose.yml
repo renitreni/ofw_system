@@ -1,0 +1,48 @@
+services:
+  app:
+    build:
+      context: .
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ofwmonitoring
+      DB_USERNAME: ofw_user
+      DB_PASSWORD: ofw_password
+    volumes:
+      - ./:/var/www/html
+      - app_vendor:/var/www/html/vendor
+      - app_node_modules:/var/www/html/node_modules
+      - app_public_build:/var/www/html/public/build
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: ofwmonitoring
+      MYSQL_USER: ofw_user
+      MYSQL_PASSWORD: ofw_password
+      MYSQL_ROOT_PASSWORD: ofw_root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+  app_vendor:
+  app_node_modules:
+  app_public_build:
