@@ -1,306 +1,531 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Modal } from 'bootstrap';
 import './adminDashboard.css';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
+// --- APPLICANTS MODULE ---
+const ApplicantsView = () => {
+const [showDownloadModal, setShowDownloadModal] = useState(false);
+const [isGenerating, setIsGenerating] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [formStep, setFormStep] = useState(1);
+  const [refCode, setRefCode] = useState('REF-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+  const [showAssignModal, setShowAssignModal] = useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState(null);
+
+ const executeDownload = (applicant) => {
+  setIsGenerating(true);
+  
+  // Create PDF
+  const doc = new jsPDF();
+  doc.setFillColor(0, 51, 102); 
+  doc.rect(0, 0, 210, 40, 'F'); 
+  doc.setFontSize(22);
+  doc.setTextColor(255, 255, 255);
+  doc.text('KALINGAGATE KSA', 14, 20);
+  doc.text(`REFERENCE CODE: ${refCode}`, 14, 34);
+
+  doc.autoTable({
+    startY: 50,
+    head: [['PERSONAL INFORMATION', '']],
+    body: [
+      ['Full Name:', applicant.name.toUpperCase()],
+      ['Gender:', applicant.gender],
+      ['Age:', applicant.age.toString()],
+      ['Passport No:', applicant.passport || '---'],
+      ['Contact:', applicant.contact],
+      ['Email:', applicant.email],
+    ],
+    theme: 'plain',
+    headStyles: { fillColor: [220, 53, 69] }
+  });
+
+  // Final Save
+  doc.save(`${applicant.name.replace(/\s+/g, '_')}_Record.pdf`);
+  
+  // Close the popup after download
+  setIsGenerating(false);
+  setShowDownloadModal(false);
+};
+
+// Helper to open the popup
+const handleDownloadClick = (applicant) => {
+  setSelectedApplicant(applicant);
+  setShowDownloadModal(true);
+
+};
+
+  const handleOpenAssign = (applicant) => {
+    setSelectedApplicant(applicant);
+    setShowAssignModal(true);
+  };
+
+  const generateNewCode = () => {
+    setRefCode('REF-' + Math.random().toString(36).substr(2, 9).toUpperCase());
+  };
+
+  const closeAndReset = () => {
+    setShowForm(false);
+    setFormStep(1);
+  };
+
+  const applicantsData = [
+    { id: 1, date: 'July 18, 2022', name: 'Harold Fernand', gender: 'Male', age: 27, contact: '09754680854', email: 'haroldfernand@gmail.com', passport: 'P8823412A' },
+    { id: 2, date: 'February 06, 2022', name: 'Ike Gomez', gender: 'Male', age: 25, contact: '09123456789', email: 'ikegomez@gmail.com', passport: 'P1234567B' },
+    { id: 3, date: 'November 22, 2021', name: 'Amber Diaz', gender: 'Female', age: 26, contact: '09754680855', email: 'amberdiaz@gmail.com', passport: 'P7654321C' },
+    { id: 4, date: 'September 21, 2021', name: 'Doggy Dog', gender: 'Male', age: 27, contact: '09754680856', email: 'doggydog@gmail.com', passport: 'P9988776D' },
+    { id: 5, date: 'May 15, 2021', name: 'Hannah Smith', gender: 'Female', age: 27, contact: '09754680857', email: 'hannahsmith@gmail.com', passport: 'P1122334E' },
+  ];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="applicants-header-card mb-4">
+        <div className="d-flex justify-content-between align-items-center">
+          <h1 className="display-6 fw-bold m-0">Applicants</h1>
+        </div>
+        {/* --- DOWNLOAD CONFIRMATION POPUP --- */}
+{showDownloadModal && (
+  <div className="modal-overlay-ph" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.7)', zIndex: 3000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="bg-white p-4 rounded shadow-lg text-center animate-slide-up" style={{ maxWidth: '400px', width: '90%' }}>
+      <div className="mb-3" style={{ fontSize: '40px' }}>{isGenerating ? '⏳' : '📄'}</div>
+      <h5 className="fw-bold text-dark">Export Applicant Record</h5>
+      <p className="text-muted small">Prepare formal PDF for <strong>{selectedApplicant?.name}</strong>?</p>
+      
+      <div className="d-flex gap-2 justify-content-center mt-4">
+        <button className="btn btn-light border px-4" onClick={() => setShowDownloadModal(false)} disabled={isGenerating}>Cancel</button>
+        <button className="btn btn-ph-blue text-white px-4" onClick={() => executeDownload(selectedApplicant)} disabled={isGenerating}>
+          {isGenerating ? 'Generating...' : 'Download PDF'}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+      </div>
+
+      <div className="modern-card p-4 mb-4">
+        <div className="row g-3 align-items-center">
+          <div className="col-md-6 d-flex gap-2">
+            <button className="btn btn-ph-red" onClick={() => setShowForm(true)}>➕ New Applicant</button>
+            <button className="btn btn-ph-blue-outline" onClick={() => setShowForm(true)}>📋 Application Form</button>
+          </div>
+          <div className="col-md-6">
+            <div className="search-group-ph">
+              <span className="search-icon">🔍</span>
+              <input type="text" className="form-control" placeholder="Search..." onChange={(e) => setSearchTerm(e.target.value)} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="modern-card overflow-hidden">
+        <div className="table-responsive">
+          <table className="table table-hover m-0">
+            <thead className="table-ph-blue">
+              <tr>
+                <th>Date Applied ▾</th>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Primary Contact</th>
+                <th>Email</th>
+                <th className="text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {applicantsData.filter(val => val.name.toLowerCase().includes(searchTerm.toLowerCase())).map((item, index) => (
+                <tr key={index} className="align-middle">
+                  <td className="text-muted small">{item.date}</td>
+                  <td className="fw-bold">{item.name}</td>
+                  <td>{item.gender}</td>
+                  <td>{item.age}</td>
+                  <td>{item.contact}</td>
+                  <td className="text-primary small">{item.email}</td>
+                  <td className="text-center">
+                    <div className="d-flex justify-content-center gap-1">
+                      <button className="btn action-btn-ph" title="Assign Employer" onClick={() => handleOpenAssign(item)}>🤝</button>
+                      <button className="btn action-btn-ph" title="Download PDF" onClick={() => handleDownloadClick(item)}>📥</button>
+                      <button className="btn action-btn-ph" title="Details">ℹ️</button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* --- ASSIGN EMPLOYER POPUP --- */}
+      {showAssignModal && (
+        <div className="modal-overlay-ph">
+          <div className="application-modal animate-slide-up" style={{ maxWidth: '500px' }}>
+            <div className="p-4 bg-white rounded shadow-lg">
+              <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                <h5 className="fw-bold m-0 text-dark">Assign Employer</h5>
+                <button className="btn-close" onClick={() => setShowAssignModal(false)}></button>
+              </div>
+
+              <p className="small text-muted mb-4">
+                Deployment details for: <strong className="text-primary">{selectedApplicant?.name}</strong>
+              </p>
+
+              <div className="mb-3 text-start">
+                <label className="form-label-ph fw-bold" style={{ fontSize: '11px' }}>SELECT COMPANY / EMPLOYER</label>
+                <select className="form-select-ph w-100">
+                  <option selected disabled>Choose from active records...</option>
+                  <option>Saudi Aramco</option>
+                  <option>Al-Futtaim Group</option>
+                  <option>Binladen Group</option>
+                </select>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col-6 text-start">
+                  <label className="form-label-ph fw-bold" style={{ fontSize: '11px' }}>ASSIGNED POSITION</label>
+                  <input type="text" className="form-control-ph" placeholder="e.g. Lead Pipefitter" />
+                </div>
+                <div className="col-6 text-start">
+                  <label className="form-label-ph fw-bold" style={{ fontSize: '11px' }}>MONTHLY SALARY (SR)</label>
+                  <input type="number" className="form-control-ph" placeholder="e.g. 2500" />
+                </div>
+              </div>
+
+              <div className="mb-4 text-start">
+                <label className="form-label-ph fw-bold" style={{ fontSize: '11px' }}>DEPLOYMENT CITY</label>
+                <select className="form-select-ph w-100">
+                  <option>Riyadh</option>
+                  <option>Jeddah</option>
+                  <option>Dammam</option>
+                  <option>Al Khobar</option>
+                </select>
+              </div>
+
+              <div className="d-flex gap-2 justify-content-end mt-4">
+                <button className="btn btn-light border px-4 py-2" onClick={() => setShowAssignModal(false)}>Cancel</button>
+                <button className="btn btn-ph-blue px-4 py-2 fw-bold text-white shadow-sm" onClick={() => {
+                  alert('Employment record updated successfully!');
+                  setShowAssignModal(false);
+                }}>
+                  Confirm Assignment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- APPLICATION FORM MODAL --- */}
+      {showForm && (
+        <div className="modal-overlay-ph">
+          <div className="application-modal animate-slide-up">
+            <div className="modal-header-container d-flex justify-content-between align-items-center p-3 border-bottom bg-white sticky-top rounded-top">
+              <div className="d-flex align-items-center gap-3">
+                <div className="ph-logo-circle bg-dark text-white d-flex align-items-center justify-content-center" style={{ width: '45px', height: '45px', borderRadius: '12px' }}>
+                  <span style={{ fontSize: '24px' }}>🦅</span>
+                </div>
+                <div>
+                  <h5 className="m-0 fw-bold text-dark letter-spacing-1">KALINGAGATE <span className="text-primary">KSA</span></h5>
+                  <small className="text-muted text-uppercase fw-bold" style={{ fontSize: '10px' }}>Overseas Recruitment Portal</small>
+                </div>
+              </div>
+              <div className="d-flex gap-2">
+                <button className="btn btn-sm btn-outline-secondary px-3" onClick={() => window.print()}>Print Form</button>
+                <button className="btn btn-sm btn-light border fw-bold px-3" onClick={closeAndReset}>✕ Close</button>
+              </div>
+            </div>
+
+            <div className="px-4 py-3 bg-light border-bottom">
+              <h2 className="fw-bold text-dark mb-1">Application Form</h2>
+              <p className="text-muted small m-0">Complete the profile below to proceed with the recruitment process. (Step {formStep} of 2)</p>
+            </div>
+
+            <div className="modal-body-ph p-4 scroll-form">
+              <form className="row g-0 application-container-box shadow-sm border rounded bg-white">
+                <div className="col-12">
+                  <div className="form-section-header-red py-2 px-4 text-white fw-bold">
+                    <span className="me-2">📋</span> {formStep === 1 ? 'ACCOUNT INFORMATION' : 'SKILLS & EXPERIENCE'}
+                  </div>
+                </div>
+
+                <div className="p-4 row g-3">
+                  {formStep === 1 ? (
+                    <>
+                      {/* LEFT COLUMN */}
+                      <div className="col-md-4 border-end pe-4">
+                        <label className="form-label-ph">Position Selected</label>
+                        <select className="form-select-ph w-100 mb-3">
+                          <option selected disabled>Choose position...</option>
+                          <option>General Labor</option>
+                          <option>Skilled Technician</option>
+                          <option>Domestic Worker</option>
+                          <option>Healthcare Staff</option>
+                        </select>
+
+                        <div className="d-flex align-items-end gap-2 mb-3">
+                          <div className="flex-grow-1">
+                            <label className="form-label-ph">System Reference Code</label>
+                            <input type="text" className="form-control-ph bg-light fw-bold text-primary" value={refCode} readOnly />
+                          </div>
+                          <button type="button" className="btn btn-gold-ph btn-sm px-3 py-2" onClick={generateNewCode}>Generate</button>
+                        </div>
+
+                        <label className="form-label-ph">Full Name</label>
+                        <input type="text" className="form-control-ph mb-3" placeholder="First Middle Last" />
+
+                        <label className="form-label-ph">Permanent Address</label>
+                        <textarea className="form-control-ph mb-3" rows="2" placeholder="Street, City, Province, Zip"></textarea>
+
+                        <label className="form-label-ph">Date of Birth</label>
+                        <input type="date" className="form-control-ph mb-3" />
+
+                        <label className="form-label-ph">Place of Birth</label>
+                        <input type="text" className="form-control-ph mb-3" placeholder="City or Province" />
+
+                        <label className="form-label-ph">Contact Number</label>
+                        <input type="tel" className="form-control-ph mb-3" placeholder="09XX XXX XXXX" />
+
+                        <div className="row g-2">
+                          <div className="col-6">
+                            <label className="form-label-ph">Gender</label>
+                            <select className="form-select-ph w-100"><option>Male</option><option>Female</option></select>
+                          </div>
+                          <div className="col-6">
+                            <label className="form-label-ph">Religion</label>
+                            <select className="form-select-ph w-100"><option>Catholic</option><option>Islam</option><option>Other</option></select>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* MIDDLE COLUMN */}
+                      <div className="col-md-4 border-end px-4">
+                        <label className="form-label-ph">Passport Number</label>
+                        <input type="text" className="form-control-ph mb-3" placeholder="P0000000A" />
+
+                        <label className="form-label-ph">Place of Issue</label>
+                        <input type="text" className="form-control-ph mb-3" placeholder="DFA Office Location" />
+
+                        <label className="form-label-ph">Date of Expiry</label>
+                        <input type="date" className="form-control-ph mb-3" />
+
+                        <label className="form-label-ph">College / University</label>
+                        <input type="text" className="form-control-ph mb-3" placeholder="Name of Institution" />
+
+                        <label className="form-label-ph">High School</label>
+                        <input type="text" className="form-control-ph mb-3" placeholder="Name of Institution" />
+
+                        <label className="form-label-ph">Vocational / TESDA</label>
+                        <input type="text" className="form-control-ph mb-3" placeholder="Course Title" />
+
+                        <div className="mb-3">
+                          <label className="form-label-ph">Civil Status</label>
+                          <select className="form-select-ph w-100">
+                            <option>Single</option>
+                            <option>Married</option>
+                            <option>Widowed</option>
+                            <option>Separated</option>
+                          </select>
+                        </div>
+
+                        <div className="row g-2">
+                          <div className="col-6">
+                            <label className="form-label-ph">Height (cm)</label>
+                            <input type="number" className="form-control-ph" placeholder="170" />
+                          </div>
+                          <div className="col-6">
+                            <label className="form-label-ph">Weight (kg)</label>
+                            <input type="number" className="form-control-ph" placeholder="65" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* RIGHT COLUMN */}
+                      <div className="col-md-4 ps-4 d-flex flex-column">
+                        <label className="form-label-ph">Expected Deployment Date</label>
+                        <input type="date" className="form-control-ph mb-3" />
+
+                        <label className="form-label-ph">Application Date</label>
+                        <input type="date" className="form-control-ph mb-3" defaultValue={new Date().toISOString().split('T')[0]} />
+
+                        <label className="form-label-ph">Initial Career Notes</label>
+                        <textarea
+                          className="form-control-ph w-100 mb-4 flex-grow-1"
+                          placeholder="General observations..."
+                          style={{ resize: 'none', minHeight: '200px' }}
+                        ></textarea>
+
+                        <div className="mt-auto d-flex justify-content-end gap-2 pb-2 pt-3 border-top">
+                          <button type="button" className="btn btn-outline-secondary px-4 py-2" onClick={closeAndReset}>Cancel</button>
+                          <button type="button" className="btn btn-primary px-5 py-2 fw-bold shadow-sm" onClick={() => setFormStep(2)}>
+                            NEXT STEP →
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* PAGE 2 */}
+                      <div className="col-md-4 border-end pe-4">
+                        <label className="form-label-ph">Applicant Face Photo</label>
+                        <div className="photo-upload-placeholder border rounded p-4 text-center bg-light mb-3">
+                          <div style={{ fontSize: '40px' }}>📸</div>
+                          <input type="file" className="form-control form-control-sm mt-2" />
+                          <small className="text-muted d-block mt-1">Upload JPG or PNG (Max 2MB)</small>
+                        </div>
+                        <label className="form-label-ph">Languages Spoken</label>
+                        <textarea className="form-control-ph mb-3" rows="3" placeholder="e.g. English, Arabic, Tagalog"></textarea>
+                      </div>
+
+                      <div className="col-md-4 border-end px-4">
+                        <label className="form-label-ph">Detailed Work History</label>
+                        <textarea className="form-control-ph mb-3" rows="10" placeholder="Year | Company | Position | Country"></textarea>
+                        <label className="form-label-ph">Specialized Skills</label>
+                        <input type="text" className="form-control-ph" placeholder="Driving, Cooking, Medical, etc." />
+                      </div>
+
+                      <div className="col-md-4 ps-4 d-flex flex-column">
+                        <label className="form-label-ph">Formal Objective</label>
+                        <textarea
+                          className="form-control-ph w-100 mb-4 flex-grow-1"
+                          placeholder="Describe the applicant's professional goals..."
+                          style={{ resize: 'none', minHeight: '200px' }}
+                        ></textarea>
+
+                        <div className="mt-auto d-flex justify-content-end gap-2 pb-2 pt-3 border-top">
+                          <button type="button" className="btn btn-outline-secondary px-4 py-2" onClick={() => setFormStep(1)}>Back</button>
+                          <button type="submit" className="btn btn-success px-5 py-2 fw-bold text-white shadow-sm border-0">
+                            SAVE APPLICATION
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// --- MAIN DASHBOARD COMPONENT ---
 const AdminDashboard = () => {
   const [activePage, setActivePage] = useState('Dashboard');
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [selectedDoc, setSelectedDoc] = useState(null);
-  const [selectedOFW, setSelectedOFW] = useState(null);
-  const [searchTerm, setSearchTerm] = useState(''); 
 
- 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const getPHTDisplay = (date) => {
-    const formatter = new Intl.DateTimeFormat('en-GB', {
-      timeZone: 'Asia/Manila',
-      day: '2-digit', month: '2-digit', year: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-    });
-    const parts = formatter.formatToParts(date);
-    const getPart = (type) => parts.find(p => p.type === type).value;
-    return {
-      time: `${getPart('hour')} : ${getPart('minute')} : ${getPart('second')}`,
-      date: `${getPart('month')}-${getPart('day')}-${getPart('year')}` 
-    };
-  };
-
-  const pht = getPHTDisplay(currentTime);
-
-  const openFilesModal = () => {
-    const modal = new Modal(document.getElementById('filesModal'));
-    modal.show();
-  };
-
-  const openPreviewModal = (docType) => {
-    setSelectedDoc(docType);
- 
-    const modal = new Modal(document.getElementById('previewModal'), { backdrop: false });
-    modal.show();
-  };
-
-  const openProfileModal = (name) => {
-    setSelectedOFW(name);
-    const modal = new Modal(document.getElementById('profileModal'));
-    modal.show();
+  const pht = {
+    time: currentTime.toLocaleTimeString('en-US', { hour12: true, timeZone: 'Asia/Manila' }),
+    date: currentTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'Asia/Manila' })
   };
 
   const renderContent = () => {
     switch (activePage) {
       case 'Dashboard':
         return (
-          <div className="animate-fade-in">
-            <h1 className="h3 fw-bold mb-4 text-black text-start">Admin</h1>
-            <div className="stats-banner p-4 mb-4 rounded-4 shadow-sm" style={{ backgroundColor: '#DCDCDC' }}>
-              <div className="row g-3">
-                <div className="col-lg-7">
-                  <div className="row g-2">
-                    <div className="col-6"><div className="stat-card p-3 bg-white rounded-3 shadow-sm text-black"><b>OFW</b><h2>120</h2></div></div>
-                    <div className="col-6"><div className="stat-card p-3 bg-white rounded-3 shadow-sm text-black"><b>Appointment</b><h2>20</h2></div></div>
-                    <div className="col-6"><div className="stat-card p-3 bg-white rounded-3 shadow-sm text-black"><b>New Contract Arrive</b><h2>13</h2></div></div>
-                    <div className="col-6"><div className="stat-card p-3 bg-white rounded-3 shadow-sm text-black"><b>Rejected</b><h2>3</h2></div></div>
-                  </div>
-                </div>
-                <div className="col-lg-5">
-                  <div className="clock-card h-100 p-4 rounded-4 text-center d-flex flex-column justify-content-center border position-relative overflow-hidden" style={{ backgroundColor: '#E8EBF2' }}>
-                    <div className="clock-pattern"></div>
-                    <p className="text-muted fw-bold m-0 z-1">Real-time (PHT)</p>
-                    <h1 className="display-4 fw-bold m-2 z-1 text-black">{pht.time}</h1>
-                    <p className="fw-bold m-0 z-1 text-black">{pht.date}</p>
-                  </div>
-                </div>
+          <div className="animate-fade-in dashboard-viewport">
+            <div className="d-flex justify-content-between align-items-end mb-4">
+              <div>
+                <h1 className="h3 fw-bold m-0 text-dark">KSA Operations Overview</h1>
+                <p className="text-muted small m-0">Monitoring deployment and welfare for Saudi Arabia operations.</p>
+              </div>
+              <span className="badge-ph-blue">System Online</span>
+            </div>
+
+            <div className="stats-grid mb-4">
+              <div className="stat-box blue-border">
+                <div className="stat-info"><small>TOTAL APPLICANTS</small><h2>432</h2></div>
+                <div className="stat-icon bg-light-blue">📝</div>
+              </div>
+              <div className="stat-box yellow-border">
+                <div className="stat-info"><small>CURRENTLY EMPLOYED</small><h2>1,102</h2></div>
+                <div className="stat-icon bg-light-yellow">💼</div>
+              </div>
+              <div className="stat-box red-border">
+                <div className="stat-info"><small>PENDING REPORTS</small><h2 className="text-danger">08</h2></div>
+                <div className="stat-icon bg-light-red">🚨</div>
+              </div>
+              <div className="stat-box blue-border">
+                <div className="stat-info"><small>ACTIVE AGENCIES</small><h2>12</h2></div>
+                <div className="stat-icon bg-light-blue">🏛️</div>
               </div>
             </div>
-            <div className="notice-box border rounded-4 bg-white shadow-sm overflow-hidden">
-              <div className="notice-header p-2 px-4 fw-bold text-muted border-bottom" style={{ backgroundColor: '#E0E0E0' }}>NOTICE!</div>
-              <div className="p-4">
-                <div className="p-3 mb-2 border rounded bg-light d-flex justify-content-between text-black">
-                  <span>New Contract!!</span><span>▼</span>
-                </div>
-                <div className="p-3 border rounded text-black">Maria Leonor- Contract</div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'OFW':
-       
-        const filteredOFWList = ["Brooklyn Edwards", "Jane Doe", "Juan Dela Cruz", "Maria Clara", "Antonio Luna"].filter(name =>
-          name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
 
-        return (
-          <div className="animate-fade-in">
-            <h1 className="h3 fw-bold mb-4 text-black text-start">OFW List</h1>
-            <div className="ofw-table-card rounded-4 shadow-sm border bg-white overflow-hidden">
-                <div className="table-header p-3 text-muted fw-bold border-bottom d-flex align-items-center" style={{backgroundColor: '#DCDCDC'}}>
-                    <span className="ofw-col-name">Employee Name</span>
-                    <span className="ofw-col-res">Contract Result</span>
-                    <span className="ofw-col-doc">Documents</span>
-                    <span className="ofw-col-act"></span>
-                </div>
-                <div className="p-3">
-                    {filteredOFWList.map((name, i) => (
-                        <div key={i} className="ofw-list-row d-flex align-items-center p-3 mb-3 border rounded-4 bg-light shadow-sm text-black">
-                            <span className="ofw-col-name fw-bold">{name}</span>
-                            <span className={`ofw-col-res fw-bold ${i % 2 === 0 ? 'text-warning' : 'text-success'}`}>
-                              {i % 2 === 0 ? 'Pending' : 'Verified'}
-                            </span>
-                            <div className="ofw-col-doc cursor-pointer fw-bold" onClick={openFilesModal}>
-                                <span className="small me-2">See Attached Files</span>
-                                <span className="small">▼</span>
-                            </div>
-                            <div className="ofw-col-act cursor-pointer px-3 fs-4 fw-bold" onClick={() => openProfileModal(name)}>•••</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-          </div>
-        );
-      case 'Appointments':
-       
-        const filteredApps = [
-          { name: "Brooklyn Edwards", type: "Visa Interview", date: "10-12-26" },
-          { name: "Jane Doe", type: "Medical Exam", date: "02-15-26" },
-          { name: "Juan Dela Cruz", type: "PDOS Seminar", date: "02-20-26" }
-        ].filter(app => app.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
-        return (
-          <div className="animate-fade-in px-2">
-            <h1 className="h3 fw-bold mb-4 text-black text-start">Appointments</h1>
-            <div className="row g-3 mb-4">
-              <div className="col-md-4"><div className="p-3 rounded-4 shadow-sm border bg-white text-start text-black"><p className="small fw-bold text-muted mb-1">TODAY'S APPOINTMENTS</p><h2 className="fw-bold m-0">08</h2></div></div>
-              <div className="col-md-4"><div className="p-3 rounded-4 shadow-sm border bg-white text-start text-black"><p className="small fw-bold text-muted mb-1">UPCOMING (THIS WEEK)</p><h2 className="fw-bold m-0">24</h2></div></div>
-              <div className="col-md-4"><div className="p-3 rounded-4 shadow-sm border bg-white text-start text-warning"><p className="small fw-bold text-muted mb-1">PENDING RESULTS</p><h2 className="fw-bold m-0">12</h2></div></div>
-            </div>
-            <div className="ofw-table-card rounded-4 shadow-sm border bg-white overflow-hidden">
-                <div className="table-header p-3 text-muted fw-bold border-bottom d-flex align-items-center" style={{backgroundColor: '#DCDCDC'}}>
-                    <span className="app-col-name">Employee Name</span>
-                    <span className="app-col-type">Type</span>
-                    <span className="app-col-sch">Schedule</span>
-                    <span className="app-col-act"></span>
-                </div>
-                <div className="p-3">
-                    {filteredApps.map((app, i) => (
-                        <div key={i} className="ofw-list-row d-flex align-items-center p-3 mb-3 border rounded-4 bg-light shadow-sm text-black">
-                            <span className="app-col-name fw-bold">{app.name}</span>
-                            <span className="app-col-type fw-bold small text-muted">{app.type}</span>
-                            <span className="app-col-sch fw-bold">{app.date}</span>
-                            <div className="app-col-act cursor-pointer px-3 fs-4 fw-bold" onClick={() => openProfileModal(app.name)}>•••</div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-          </div>
-        );
-      case 'Documents':
-        return (
-          <div className="animate-fade-in">
-            <h1 className="h3 fw-bold mb-4 text-black text-start">Document Repository</h1>
             <div className="row g-4">
-              {["Passport", "Contract", "Medical Record", "Visa", "NBI Clearance", "Flight Details"].map((folder, i) => (
-                <div key={i} className="col-md-4 col-lg-3">
-                  <div className="doc-folder-card p-4 rounded-4 shadow-sm border bg-white text-center cursor-pointer" onClick={() => openPreviewModal(folder)}>
-                    <div className="folder-icon mb-2" style={{ fontSize: '3rem' }}>📁</div>
-                    <h6 className="fw-bold text-black mb-1">{folder}</h6>
-                    <small className="text-muted">Archives</small>
+              <div className="col-lg-8">
+                <div className="modern-card h-100">
+                  <div className="card-header-ph d-flex justify-content-between align-items-center">
+                    <span>Recent Deployment Activity</span>
+                    <button className="btn btn-sm btn-outline-primary py-0" style={{ fontSize: '11px' }}>View All</button>
+                  </div>
+                  <div className="p-0">
+                    <div className="activity-item-new border-bottom">
+                      <div className="activity-icon blue">✈️</div>
+                      <div className="activity-details"><p className="m-0 fw-bold small">Juan Dela Cruz</p><small className="text-muted">Verified for Deployment to Riyadh</small></div>
+                      <div className="activity-time text-end"><small>2 mins ago</small></div>
+                    </div>
                   </div>
                 </div>
-              ))}
+              </div>
+              <div className="col-lg-4">
+                <div className="clock-card-ph h-100 d-flex flex-column justify-content-center text-center">
+                  <small className="fw-bold opacity-75 mb-2">MANILA (PHT)</small>
+                  <h1 className="display-5 fw-bold mb-1">{pht.time}</h1>
+                  <p className="m-0 small opacity-75">{pht.date}</p>
+                </div>
+              </div>
             </div>
           </div>
         );
-      case 'Settings': return <div className="p-4 text-black text-start"><h3>System Settings</h3></div>;
-      default: return null;
+
+      case 'Applicants': return <ApplicantsView />;
+      default: return <div className="p-5 text-center"><h2>{activePage} Module</h2></div>;
     }
   };
 
   return (
-    <div className="admin-container d-flex vw-100 vh-100 overflow-hidden">
-      <aside className="ofw-sidebar flex-shrink-0">
-        <div className="sidebar-brand p-4"><h2 className="logo-text m-0 h4 fw-bold text-black">🐋 Logo Name</h2></div>
-        <div className="px-3 mb-4">
-          <select className="agency-select form-select">
-            <option>XYZ Agency</option>
-          </select>
+    <div className="admin-wrapper d-flex vw-100 vh-100 bg-light">
+      <aside className="sidebar-ph shadow">
+        <div className="sidebar-brand-ph">
+          <div className="flag-accent"></div>
+          <h2 className="logo-text-ph">KalingaGate <span className="ksa-tag">KSA</span></h2>
         </div>
-        <nav className="nav-group px-2">
-          <p className="nav-label ps-3 text-muted small fw-bold">MAIN MENU</p>
-          <button onClick={() => {setActivePage('Dashboard'); setSearchTerm('')}} className={`nav-btn w-100 text-start border-0 py-2 px-3 rounded mb-1 text-black ${activePage === 'Dashboard' ? 'active' : 'bg-transparent'}`}>📊 Dashboard</button>
-          <button onClick={() => {setActivePage('OFW'); setSearchTerm('')}} className={`nav-btn w-100 text-start border-0 py-2 px-3 rounded mb-1 text-black ${activePage === 'OFW' ? 'active' : 'bg-transparent'}`}>👥 OFW</button>
-          <button onClick={() => {setActivePage('Appointments'); setSearchTerm('')}} className={`nav-btn w-100 text-start border-0 py-2 px-3 rounded mb-1 text-black ${activePage === 'Appointments' ? 'active' : 'bg-transparent'}`}>📄 Appointments</button>
-          <button onClick={() => {setActivePage('Documents'); setSearchTerm('')}} className={`nav-btn w-100 text-start border-0 py-2 px-3 rounded mb-4 text-black ${activePage === 'Documents' ? 'active' : 'bg-transparent'}`}>📁 Documents</button>
-          
-          <p className="nav-label ps-3 text-muted small fw-bold">SETTINGS</p>
-          <button onClick={() => setActivePage('Settings')} className={`nav-btn w-100 text-start border-0 py-2 px-3 rounded mb-1 text-black ${activePage === 'Settings' ? 'active' : 'bg-transparent'}`}>⚙️ Settings</button>
-          <button className="nav-btn w-100 text-start border-0 py-2 px-3 rounded bg-transparent mt-2 text-black" onClick={() => window.confirm("Are you sure you want to log out?") && window.location.reload()}>
-            <span className="me-2">⬅️</span> Log Out
-          </button>
+        <nav className="nav-list-ph">
+          <small className="nav-section-label">MANAGEMENT</small>
+          <button onClick={() => setActivePage('Dashboard')} className={`nav-item-ph ${activePage === 'Dashboard' ? 'active' : ''}`}><span>📊</span> Dashboard</button>
+          <button onClick={() => setActivePage('Applicants')} className={`nav-item-ph ${activePage === 'Applicants' ? 'active' : ''}`}><span>📝</span> Applicants</button>
+          <button onClick={() => setActivePage('Employed')} className={`nav-item-ph ${activePage === 'Employed' ? 'active' : ''}`}><span>💼</span> Employed</button>
+          <button onClick={() => setActivePage('Employers')} className={`nav-item-ph ${activePage === 'Employers' ? 'active' : ''}`}><span>🏢</span> Employers</button>
+          <button onClick={() => setActivePage('Co-Host')} className={`nav-item-ph ${activePage === 'Co-Host' ? 'active' : ''}`}><span>🤝</span> Co-Host</button>
+          <button onClick={() => setActivePage('Reports')} className={`nav-item-ph ${activePage === 'Reports' ? 'active' : ''}`}><span>📋</span> Reports</button>
+          <button onClick={() => setActivePage('Vouchers')} className={`nav-item-ph ${activePage === 'Vouchers' ? 'active' : ''}`}><span>🎟️</span> Vouchers</button>
+          <button onClick={() => setActivePage('Agency')} className={`nav-item-ph ${activePage === 'Agency' ? 'active' : ''}`}><span>🏛️</span> Agency</button>
+          <div className="mt-auto pb-3">
+            <button className="nav-item-ph logout-btn" onClick={() => window.location.reload()}><span>⬅️</span> Log Out</button>
+          </div>
         </nav>
       </aside>
 
-      <main className="ofw-main flex-grow-1 d-flex flex-column bg-white">
-        <header className="ofw-header d-flex justify-content-between align-items-center p-4 border-bottom">
-           <div className="search-wrapper w-50">
-             <input 
-               type="text" 
-               className="form-control bg-light border-0 text-black" 
-               placeholder="Search Employee..." 
-               value={searchTerm}
-               onChange={(e) => setSearchTerm(e.target.value)}
-             />
-           </div>
-           <div className="profile-info text-end me-3 text-black">
-              <p className="m-0 fw-bold small">Maria Martha Lee</p>
-              <p className="m-0 text-muted small">Status: Online</p>
+      <main className="main-content-ph flex-grow-1 d-flex flex-column overflow-hidden">
+        <header className="header-ph px-4 border-bottom bg-white d-flex justify-content-between align-items-center">
+          <h5 className="m-0 fw-bold text-dark">{activePage}</h5>
+          <div className="user-profile-ph d-flex align-items-center gap-3">
+            <div className="user-text text-end d-none d-md-block">
+              <p className="m-0 fw-bold small">Admin Martha</p>
+              <small className="text-success" style={{ fontSize: '10px' }}>● Super Admin</small>
             </div>
+            <div className="avatar-ph">AM</div>
+          </div>
         </header>
-        <div className="dashboard-scroll-area flex-grow-1 overflow-auto px-4 pb-4">{renderContent()}</div>
+        <div className="scroll-area-ph p-4">{renderContent()}</div>
       </main>
-
-      {}
-      <div className="modal fade" id="filesModal" tabIndex="-1" aria-hidden="true">
-        <div className="modal-dialog modal-lg modal-dialog-centered">
-          <div className="modal-content border-0 rounded-4 shadow">
-            <div className="modal-header border-0 pb-0">
-              <h5 className="modal-title w-100 text-center fw-bold text-muted mt-3">See Attached Files</h5>
-              <button type="button" className="btn-close me-2" data-bs-dismiss="modal"></button>
-            </div>
-            <div className="modal-body p-4">
-              <div className="row g-4">
-                {["Passport", "Contract", "Medical Record", "Visa", "NBI/Police Clearance", "Flight Details"].map((label, idx) => (
-                  <div key={idx} className="col-md-6">
-                    <div className="doc-item-container shadow-sm border rounded-3 p-3 bg-white d-flex justify-content-between align-items-center">
-                      <div className="text-start">
-                        <p className="m-0 text-black fw-bold">{label}</p>
-                        <small className="text-muted opacity-50">Attached File</small>
-                      </div>
-                      <span className="chevron-icon text-muted fw-bold fs-4 cursor-pointer" onClick={() => openPreviewModal(label)}>〉</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="modal fade" id="previewModal" tabIndex="-1" aria-hidden="true">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content border-0 rounded-4 shadow-lg p-4 text-center">
-            <div className="d-flex justify-content-between mb-3 align-items-center">
-                <h6 className="fw-bold m-0 text-black">{selectedDoc} Preview</h6>
-                <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div className="file-preview-box border rounded-3 p-5 bg-light d-flex flex-column align-items-center">
-                <span className="fs-1 mb-2">📄</span>
-                <p className="fw-bold mb-0 text-black">sample_{selectedDoc?.toLowerCase().replace(/ /g, '_')}.pdf</p>
-                <small className="text-muted">2.4 MB</small>
-            </div>
-            <button className="btn btn-dark w-100 mt-3 rounded-pill">Download File</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="modal fade" id="profileModal" tabIndex="-1" aria-hidden="true" style={{zIndex: 1050}}>
-        <div className="modal-dialog modal-lg modal-dialog-centered">
-          <div className="modal-content border-0 rounded-4 shadow bg-light p-4">
-            <div className="modal-header border-0 p-0 mb-3"><button type="button" className="btn-close" data-bs-dismiss="modal"></button></div>
-            <div className="d-flex align-items-center mb-4">
-                <div className="rounded-circle bg-secondary me-3" style={{width: '100px', height: '100px'}}></div>
-                <div className="text-start">
-                    <h4 className="fw-bold m-0 text-black">{selectedOFW}</h4>
-                    <p className="text-muted small">Status: Verified</p>
-                </div>
-            </div>
-            <div className="row g-3 mb-4">
-                <div className="col-md-6 text-start"><label className="small fw-bold text-black">Name</label><input className="form-control border-0 bg-white" defaultValue={selectedOFW} readOnly /></div>
-                <div className="col-md-6 text-start"><label className="small fw-bold text-black">Address</label><input className="form-control border-0 bg-white" defaultValue="Philippines" readOnly /></div>
-                <div className="col-md-6 text-start"><label className="small fw-bold text-black">Email</label><input className="form-control border-0 bg-white" defaultValue="user@example.com" readOnly /></div>
-                <div className="col-md-6 text-start"><label className="small fw-bold text-black">Birthdate</label><input className="form-control border-0 bg-white" defaultValue="01-01-1990" readOnly /></div>
-                <div className="col-md-6 text-start"><label className="small fw-bold text-black">Phone Number</label><input className="form-control border-0 bg-white" defaultValue="09123456789" readOnly /></div>
-                <div className="col-md-6 text-start"><label className="small fw-bold text-black">Emergency Contact</label><input className="form-control border-0 bg-white" defaultValue="09987654321" readOnly /></div>
-            </div>
-            <div className="bg-white p-3 rounded-4 border shadow-sm text-start">
-                <h6 className="fw-bold text-muted border-bottom pb-2 mb-3">See Attached Files</h6>
-                <div className="row g-2">
-                    {["Passport", "Contract", "Medical Record", "Visa", "NBI Clearance", "Flight Details"].map((doc, idx) => (
-                        <div key={idx} className="col-md-6">
-                            <div className="p-2 border rounded-3 bg-light d-flex justify-content-between align-items-center">
-                                <span className="small fw-bold text-black ps-2">{doc}</span>
-                                <button className="btn btn-link p-0 px-2 text-muted fs-5 fw-bold text-decoration-none doc-view-btn" onClick={() => openPreviewModal(doc)}>〉</button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };

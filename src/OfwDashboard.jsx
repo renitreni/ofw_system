@@ -10,38 +10,25 @@ const OfwDashboard = () => {
   const [selectedSession, setSelectedSession] = useState("");
   const [selectedSlotId, setSelectedSlotId] = useState(null);
 
-  const [isChangingEmail, setIsChangingEmail] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
+  // Flight Details States
+  const [flightList, setFlightList] = useState([]);
 
-  // Emergency States
+  // ... (Emergency & Modal States preserved)
   const [sosActive, setSosActive] = useState(false);
   const [isLiveTracking, setIsLiveTracking] = useState(false);
-  
-  // Incident Reporting & Modal States
   const [showDiscreetModal, setShowDiscreetModal] = useState(false);
   const [isVerifyingOTP, setIsVerifyingOTP] = useState(false);
   const [currentCaseId, setCurrentCaseId] = useState("");
   const [previewDoc, setPreviewDoc] = useState(null);
-  
-  // NEW: State for Calling Modal
   const [callingHotline, setCallingHotline] = useState(null);
 
   const stepOrder = ['Account Information', 'Personal Details', 'Upload Documents', 'Profile Completed', 'Book Appointment'];
   const isCompleted = (stepName) => stepOrder.indexOf(regStep) >= stepOrder.indexOf(stepName);
 
   const slotsData = {
-    "morning": [
-      { id: 1, date: "10-20-26", time: "8:00 am - 10:00 am" },
-      { id: 2, date: "10-20-26", time: "10:30 am - 12:00 pm" }
-    ],
-    "afternoon": [
-      { id: 3, date: "10-21-26", time: "1:00 pm - 3:00 pm" },
-      { id: 4, date: "10-21-26", time: "3:30 pm - 5:30 pm" }
-    ],
-    "evening": [
-      { id: 5, date: "10-22-26", time: "6:00 pm - 8:00 pm" },
-      { id: 6, date: "10-22-26", time: "8:30 pm - 10:00 pm" }
-    ]
+    "morning": [{ id: 1, date: "10-20-26", time: "8:00 am - 12:00 pm" }],
+    "afternoon": [{ id: 3, date: "10-21-26", time: "1:00 pm - 5:00 pm" }],
+    "evening": [{ id: 5, date: "10-22-26", time: "6:00 pm - 10:00 pm" }]
   };
 
   return (
@@ -53,12 +40,14 @@ const OfwDashboard = () => {
         </div>
         <nav className="nav-group">
           <p className="nav-label">MAIN MENU</p>
-          <button className={`nav-btn ${activePage === 'dashboard' ? 'active' : ''}`} onClick={() => { setActivePage('dashboard'); setShowRegistration(false); setIsVerifying(false); setIsBookingComplete(false); }}><span className="icon">📊</span> Dashboard</button>
-          <button className={`nav-btn ${activePage === 'emergency' ? 'active' : ''}`} onClick={() => { setActivePage('emergency'); setShowRegistration(false); setIsVerifying(false); setIsBookingComplete(false); }}><span className="icon">🆘</span> Emergency</button>
+          <button className={`nav-btn ${activePage === 'dashboard' ? 'active' : ''}`} onClick={() => { setActivePage('dashboard'); setShowRegistration(false); }}><span className="icon">📊</span> Dashboard</button>
+          <button className={`nav-btn ${activePage === 'emergency' ? 'active' : ''}`} onClick={() => { setActivePage('emergency'); setShowRegistration(false); }}><span className="icon">🆘</span> Emergency</button>
+          {/* Added Flight Details to Sidebar */}
+          <button className={`nav-btn ${activePage === 'flight' ? 'active' : ''}`} onClick={() => { setActivePage('flight'); setShowRegistration(false); }}><span className="icon">✈️</span> Flight Details</button>
         </nav>
         <nav className="nav-group settings-group">
           <p className="nav-label">SETTINGS</p>
-          <button className="nav-btn" onClick={() => { setActivePage('settings'); setShowRegistration(false); }}><span className="icon">⚙️</span> Settings</button>
+          <button className="nav-btn"><span className="icon">⚙️</span> Settings</button>
           <button className="nav-btn" onClick={() => alert("Logging out...")}><span className="icon">⬅️</span> Log Out</button>
         </nav>
       </aside>
@@ -73,9 +62,64 @@ const OfwDashboard = () => {
         </header>
 
         <div className="dashboard-frame">
-          {/* 1. AESTHETIC EMERGENCY PAGE */}
+          
+          {/* FLIGHT DETAILS PAGE */}
+          {activePage === 'flight' && (
+            <div className="flight-container aesthetic-fade">
+              <div className="flight-header-banner">
+                <h3 className="m-0">Flight Details</h3>
+              </div>
+
+              <div className="flight-form-card aesthetic-card mt-3">
+                <div className="flight-input-grid">
+                  <select className="reg-input flight-select"><option>Abroad Agency</option></select>
+                  <input type="text" placeholder="Contact Person" className="reg-input" />
+                  <input type="text" placeholder="Contact Number" className="reg-input" />
+                  <input type="text" placeholder="Contact Address" className="reg-input" />
+                </div>
+
+                <div className="add-checklist-section mt-4">
+                  <h5 className="fw-bold">Add to Check List</h5>
+                  <div className="checklist-input-row">
+                    <div className="pending-status-box">Pending</div>
+                    <button className="add-plus-btn" onClick={() => alert("Feature: Add to checklist")}>+</button>
+                  </div>
+                </div>
+
+                <div className="flight-table-container mt-4">
+                  <table className="flight-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Contact Person</th>
+                        <th>Contact Number</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {flightList.length === 0 ? (
+                        <tr><td colSpan="4" className="text-center py-5 text-muted">No flight records found</td></tr>
+                      ) : (
+                        flightList.map(item => (
+                          <tr key={item.id}>
+                            <td>{item.id}</td>
+                            <td>{item.person}</td>
+                            <td>{item.number}</td>
+                            <td><button className="btn-action">View</button></td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* EMERGENCY PAGE (Preserved) */}
           {activePage === 'emergency' && (
             <div className="emergency-container aesthetic-fade">
+              {/* ... existing emergency code ... */}
               <div className="emergency-header-alert aesthetic-alert">
                 <span className="warning-icon">⚠️</span>
                 <div>
@@ -83,7 +127,6 @@ const OfwDashboard = () => {
                   <p>In case of immediate danger, press the button and wait for rescue.</p>
                 </div>
               </div>
-
               <div className="emergency-grid">
                 <div className="panic-section">
                   <div className="panic-card aesthetic-card text-center">
@@ -155,7 +198,6 @@ const OfwDashboard = () => {
                    </div>
                    <div className="aesthetic-card py-3">
                       <h5 className="fw-bold small mb-2 text-muted">Hotlines</h5>
-                      {/* Updated: Added onClick handlers for calling effect */}
                       <button className="hotline-pill-clean mb-2" onClick={() => setCallingHotline({ name: "Embassy Hotline", number: "+63 2 8888 1234" })}>
                         Embassy Hotline <span className="call-icon-red">📞</span>
                       </button>
@@ -168,10 +210,24 @@ const OfwDashboard = () => {
             </div>
           )}
 
-          {/* 2. REGISTRATION FLOW (Remaining same as provided) */}
-          {showRegistration ? (
+          {/* DASHBOARD & REGISTRATION FLOW (Preserved) */}
+          {!showRegistration && activePage === 'dashboard' && (
+             <>
+               <section className="hero-banner">
+                 <div className="hero-content"><h1>Registration for <br/> Deployment</h1><button className="register-btn" onClick={() => setShowRegistration(true)}>Register NOW</button></div>
+               </section>
+               <div className="notice-container">
+                  <div className="notice-inner-frame">
+                    <section className="appointment-card"><div className="appointment-content-row"><span className="notice-tag">NOTICE!</span><p className="notice-text">Your Appointment is booked</p></div></section>
+                  </div>
+                </div>
+             </>
+          )}
+
+          {showRegistration && activePage === 'dashboard' && (
             <section className="registration-view">
               <h1 className="registration-title">Registration for Deployment</h1>
+              {/* ... (existing registration code) ... */}
               <div className="registration-content">
                 <div className="steps-sidebar">
                   <button className={`step-card-btn ${regStep === 'Account Information' ? 'active' : ''}`} onClick={() => setRegStep('Account Information')}>Account Information</button>
@@ -188,7 +244,6 @@ const OfwDashboard = () => {
                 <div className="registration-form-card">
                   <div className="form-header">{regStep}</div>
                   <div className="form-body">
-                    {/* ... (Your existing form logic for each step) ... */}
                     {regStep === 'Account Information' && (
                       <>
                         <p className="form-instruction">Fill out forms:</p>
@@ -199,7 +254,6 @@ const OfwDashboard = () => {
                         <button className="next-step-btn centered-btn" onClick={() => setIsVerifying(true)}>Verify Email</button>
                       </>
                     )}
-                    {/* (Other steps like Personal Details, Upload Documents, etc., remain exactly as you have them) */}
                     {regStep === 'Personal Details' && (
                       <>
                         <p className="form-instruction">Fill out forms:</p>
@@ -263,30 +317,11 @@ const OfwDashboard = () => {
                 </div>
               </div>
             </section>
-          ) : (
-            activePage === 'dashboard' && (
-              <>
-                <section className="hero-banner">
-                  <div className="hero-content"><h1>Registration for <br/> Deployment</h1><p>Stay updated on real-time location and safety reports</p><button className="register-btn" onClick={() => setShowRegistration(true)}>Register NOW</button></div>
-                  <div className="hero-graphics">
-                    <div className="circle circle-1"></div><div className="circle circle-2"></div><div className="circle circle-3"></div><div className="circle circle-4"></div><div className="circle circle-5"></div>
-                  </div>
-                </section>
-                <div className="notice-container">
-                  <div className="notice-header-bar"></div>
-                  <div className="notice-inner-frame">
-                    <section className="appointment-card"><div className="appointment-content-row"><span className="notice-tag">NOTICE!</span><p className="notice-text">Your Appointment is booked</p></div></section>
-                  </div>
-                </div>
-              </>
-            )
           )}
         </div>
       </main>
 
-      {/* --- ALL OVERLAY MODALS --- */}
-
-      {/* NEW: Dialing / Calling Modal */}
+      {/* --- ALL OVERLAY MODALS --- (Preserved) */}
       {callingHotline && (
         <div className="verification-overlay">
           <div className="verify-card aesthetic-fade text-center p-5" style={{ background: '#fff', maxWidth: '350px', borderRadius: '30px' }}>
@@ -302,8 +337,6 @@ const OfwDashboard = () => {
           </div>
         </div>
       )}
-
-      {/* Document Preview Modal */}
       {previewDoc && (
         <div className="verification-overlay">
           <div className="verify-card aesthetic-fade p-4 text-center">
@@ -315,8 +348,6 @@ const OfwDashboard = () => {
           </div>
         </div>
       )}
-
-      {/* Emergency OTP Modal */}
       {isVerifyingOTP && (
         <div className="verification-overlay">
           <div className="verify-card custom-verify-modal text-center aesthetic-fade" style={{maxWidth: '400px'}}>
@@ -329,8 +360,6 @@ const OfwDashboard = () => {
           </div>
         </div>
       )}
-
-      {/* Final Discreet Transmitted Modal */}
       {showDiscreetModal && (
         <div className="verification-overlay">
           <div className="verify-card success-pop text-center aesthetic-fade" style={{maxWidth: '400px'}}>
@@ -345,8 +374,6 @@ const OfwDashboard = () => {
           </div>
         </div>
       )}
-
-      {/* Registration Verification Modal */}
       {isVerifying && (
         <div className="verification-overlay">
           <div className="verify-card custom-verify-modal">
@@ -356,8 +383,6 @@ const OfwDashboard = () => {
           </div>
         </div>
       )}
-
-      {/* Registration Booking Success Modal */}
       {isBookingComplete && (
         <div className="verification-overlay">
           <div className="verify-card success-pop">
