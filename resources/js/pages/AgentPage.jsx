@@ -3,177 +3,177 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "../../css/AgentPage.css";
 
 export default function AgentPage() {
-  const navigate = useNavigate();
-  const location = useLocation();
+            const navigate = useNavigate();
+            const location = useLocation();
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activeDashboardTab, setActiveDashboardTab] = useState("all");
+            const [sidebarOpen, setSidebarOpen] = useState(true);
+            const [activeDashboardTab, setActiveDashboardTab] = useState("all");
 
-  /* ================= SAMPLE DATA ================= */
-  const [contracts, setContracts] = useState([
-    {
-      id: 1,
-      name: "Maria Santos",
-      company: "Al-Rashid Construction LLC",
-      position: "Domestic Helper",
-      salary: "AED 2,500/month",
-      status: "pending",
-    },
-    {
-      id: 2,
-      name: "Juan Dela Cruz",
-      company: "Dubai Engineering",
-      position: "Electrician",
-      salary: "AED 3,000/month",
-      status: "processed",
-    },
-    {
-      id: 3,
-      name: "Ana Reyes",
-      company: "Emirates Catering",
-      position: "Kitchen Staff",
-      salary: "AED 2,800/month",
-      status: "pending",
-    },
-    {
-      id: 4,
-      name: "Mark Villanueva",
-      company: "Gulf Logistics",
-      position: "Warehouse Assistant",
-      salary: "AED 2,400/month",
-      status: "processed",
-    },
-  ]);
+            /* ================= SAMPLE DATA ================= */
+            const [contracts, setContracts] = useState([
+                {
+                id: 1,
+                name: "Maria Santos",
+                company: "Al-Rashid Construction LLC",
+                position: "Domestic Helper",
+                salary: "AED 2,500/month",
+                status: "pending",
+                },
+                {
+                id: 2,
+                name: "Juan Dela Cruz",
+                company: "Dubai Engineering",
+                position: "Electrician",
+                salary: "AED 3,000/month",
+                status: "processed",
+                },
+                {
+                id: 3,
+                name: "Ana Reyes",
+                company: "Emirates Catering",
+                position: "Kitchen Staff",
+                salary: "AED 2,800/month",
+                status: "pending",
+                },
+                {
+                id: 4,
+                name: "Mark Villanueva",
+                company: "Gulf Logistics",
+                position: "Warehouse Assistant",
+                salary: "AED 2,400/month",
+                status: "processed",
+                },
+            ]);
 
-  React.useEffect(() => {
-  localStorage.setItem("contracts", JSON.stringify(contracts));
-}, [contracts]);
+            React.useEffect(() => {
+            localStorage.setItem("contracts", JSON.stringify(contracts));
+            }, [contracts]);
 
-const viewContract = (contract) => {
-  navigate(`/agent/contracts/${contract.id}`, { state: contract });
-};
+            const viewContract = (contract) => {
+            navigate(`/agent/contracts/${contract.id}`, { state: contract });
+            };
 
-const [searchTerm, setSearchTerm] = useState("");
-const [filterStatus, setFilterStatus] = useState("all");
+            const [searchTerm, setSearchTerm] = useState("");
+            const [filterStatus, setFilterStatus] = useState("all");
 
 
-  /* ================= ROUTES ================= */
-  const isDashboard = location.pathname.includes("dashboard");
-  const isPending = location.pathname.includes("pending");
-  const isProcessed = location.pathname.includes("processed");
-  const isRejected = location.pathname.includes("rejected");
+            /* ================= ROUTES ================= */
+            const isDashboard = location.pathname.includes("dashboard");
+            const isPending = location.pathname.includes("pending");
+            const isProcessed = location.pathname.includes("processed");
+            const isRejected = location.pathname.includes("rejected");
 
-  /* ================= FILTERS ================= */
-  const dashboardContracts =
-    activeDashboardTab === "all"
-      ? contracts
-      : contracts.filter(c => c.status === activeDashboardTab);
+            /* ================= FILTERS ================= */
+            const dashboardContracts =
+                activeDashboardTab === "all"
+                ? contracts
+                : contracts.filter(c => c.status === activeDashboardTab);
 
-  const pendingContracts = contracts.filter(c => c.status === "pending");
-  const processedContracts = contracts.filter(c => c.status === "processed");
-  const rejectedContracts = contracts.filter(c => c.status === "rejected");
+            const pendingContracts = contracts.filter(c => c.status === "pending");
+            const processedContracts = contracts.filter(c => c.status === "processed");
+            const rejectedContracts = contracts.filter(c => c.status === "rejected");
 
-  /* ================= COUNTS ================= */
-  const pendingCount = pendingContracts.length;
-  const processedCount = processedContracts.length;
-  const rejectedCount = rejectedContracts.length;
+            /* ================= COUNTS ================= */
+            const pendingCount = pendingContracts.length;
+            const processedCount = processedContracts.length;
+            const rejectedCount = rejectedContracts.length;
 
-  /* ================= SEARCH FILTER ================= */
-  const filteredContracts = dashboardContracts.filter(c =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.company.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+            /* ================= SEARCH FILTER ================= */
+            const filteredContracts = dashboardContracts.filter(c =>
+                c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                c.company.toLowerCase().includes(searchTerm.toLowerCase())
+            );
 
-  /* ================= ACTIONS ================= */
-  const approveContract = (id) => {
-    setContracts(prev =>
-      prev.map(c =>
-        c.id === id ? { ...c, status: "processed" } : c
-      )
-    );
-     navigate("/agent/processed");
-  };
+            /* ================= ACTIONS ================= */
+            const approveContract = (id) => {
+                setContracts(prev =>
+                prev.map(c =>
+                    c.id === id ? { ...c, status: "processed" } : c
+                )
+                );
+                navigate("/agent/processed");
+            };
 
-  const rejectContract = (id) => {
-  setContracts(prev =>
-    prev.map(c =>
-      c.id === id ? { ...c, status: "rejected" } : c
-    )
-  );
+            const rejectContract = (id) => {
+            setContracts(prev =>
+                prev.map(c =>
+                c.id === id ? { ...c, status: "rejected" } : c
+                )
+        );
 
-  // 👉 redirect to rejected page
-  navigate("/agent/rejected");
-};
+        // 👉 redirect to rejected page
+        navigate("/agent/rejected");
+        };
 
 
   /* ================= UI ================= */
-  return (
-    <div className="d-flex">
+        return (
+            <div className="d-flex">
 
-      {/* SIDEBAR */}
-<div
-  className={`sidebar ${sidebarOpen ? "open" : "closed"} d-flex flex-column`}
-  onMouseEnter={() => setSidebarOpen(true)}
-  onMouseLeave={() => setSidebarOpen(false)}
->
+            {/* SIDEBAR */}
+        <div
+        className={`sidebar ${sidebarOpen ? "open" : "closed"} d-flex flex-column`}
+        onMouseEnter={() => setSidebarOpen(true)}
+        onMouseLeave={() => setSidebarOpen(false)}
+        >
 
-  {/* Admin Profile */}
-  {sidebarOpen && (
-    <div className="admin-profile mb-4 text-center">
-      <img src="/images/woman.png" alt="Agent user profile" className="rounded-circle" />
-      <h6 className="agent-user">Agent User</h6>
-      <small class="agent-user">Agent user of Agency</small>
-    </div>
-  )}
+            {/* Admin Profile */}
+            {sidebarOpen && (
+                <div className="admin-profile mb-4 text-center">
+                <img src="/images/woman.png" alt="Agent user profile" className="rounded-circle" />
+                <h6 className="agent-user">Agent User</h6>
+                <small class="agent-user">Agent user of Agency</small>
+                </div>
+            )}
 
-  {/* Navigation Links */}
-  <ul className="nav flex-column">
-    <li
-      className={`nav-link d-flex align-items-center ${isDashboard ? "active" : ""}`}
-      onClick={() => navigate("/agent/dashboard")}
-      style={{ cursor: "pointer" }}
-    >
-      <img src="/images/dashboards.png" alt="Dashboard" className="sidebar-icon me-2" />
-      {sidebarOpen && "Dashboard"}
-    </li>
+            {/* Navigation Links */}
+            <ul className="nav flex-column">
+                <li
+                className={`nav-link d-flex align-items-center ${isDashboard ? "active" : ""}`}
+                onClick={() => navigate("/agent/dashboard")}
+                style={{ cursor: "pointer" }}
+                >
+                <img src="/images/dashboards.png" alt="Dashboard" className="sidebar-icon me-2" />
+                {sidebarOpen && "Dashboard"}
+                </li>
 
-    <li
-      className={`nav-link d-flex align-items-center ${isPending ? "active" : ""}`}
-      onClick={() => navigate("/agent/pending")}
-      style={{ cursor: "pointer" }}
-    >
-      <img src="/images/pending.png" alt="Pending Contracts" className="sidebar-icon me-2" />
-      {sidebarOpen && "Pending Contracts"}
-    </li>
+                <li
+                className={`nav-link d-flex align-items-center ${isPending ? "active" : ""}`}
+                onClick={() => navigate("/agent/pending")}
+                style={{ cursor: "pointer" }}
+                >
+                <img src="/images/pending.png" alt="Pending Contracts" className="sidebar-icon me-2" />
+                {sidebarOpen && "Pending Contracts"}
+                </li>
 
-    <li
-      className={`nav-link d-flex align-items-center ${isProcessed ? "active" : ""}`}
-      onClick={() => navigate("/agent/processed")}
-      style={{ cursor: "pointer" }}
-    >
-      <img src="/images/processed.png" alt="Processed Contracts" className="sidebar-icon me-2" />
-      {sidebarOpen && "Processed Contracts"}
-    </li>
+                <li
+                className={`nav-link d-flex align-items-center ${isProcessed ? "active" : ""}`}
+                onClick={() => navigate("/agent/processed")}
+                style={{ cursor: "pointer" }}
+                >
+                <img src="/images/processed.png" alt="Processed Contracts" className="sidebar-icon me-2" />
+                {sidebarOpen && "Processed Contracts"}
+                </li>
 
-    <li
-      className={`nav-link d-flex align-items-center ${isRejected ? "active" : ""}`}
-      onClick={() => navigate("/agent/rejected")}
-      style={{ cursor: "pointer" }}
-    >
-      <img src="/images/rejected.png" alt="Rejected Contracts" className="sidebar-icon me-2" />
-      {sidebarOpen && "Rejected Contracts"}
-    </li>
-  </ul>
+                <li
+                className={`nav-link d-flex align-items-center ${isRejected ? "active" : ""}`}
+                onClick={() => navigate("/agent/rejected")}
+                style={{ cursor: "pointer" }}
+                >
+                <img src="/images/rejected.png" alt="Rejected Contracts" className="sidebar-icon me-2" />
+                {sidebarOpen && "Rejected Contracts"}
+                </li>
+            </ul>
 
-  {/* Logout at Bottom */}
-  
-   <div className="mt-auto">
-      <img src="/images/logout.png" alt="Logout" className="sidebar-icon me-2" />
-      {sidebarOpen && "Logout"}
-    
-  </div>
-</div>
-  
+            {/* Logout at Bottom */}
+            
+            <div className="mt-auto">
+                <img src="/images/logout.png" alt="Logout" className="sidebar-icon me-2" />
+                {sidebarOpen && "Logout"}
+                
+            </div>
+            </div>
+            
       {/* MAIN CONTENT */}
       <div className="content flex-grow-1 p-4">
 
@@ -240,25 +240,25 @@ const [filterStatus, setFilterStatus] = useState("all");
               
 
               <div className="d-flex align-items-center gap-2 mb-3">
-  {["all", "pending", "processed", "rejected"].map(tab => (
-    <button
-      key={tab}
-      className={`btn rounded-pill px-4 ${activeDashboardTab === tab ? "btn-primary" : "btn-outline-primary"}`}
-      onClick={() => setActiveDashboardTab(tab)}
-    >
-      {tab.toUpperCase()}
-    </button>
-  ))}
+                    {["all", "pending", "processed", "rejected"].map(tab => (
+                        <button
+                        key={tab}
+                        className={`btn rounded-pill px-4 ${activeDashboardTab === tab ? "btn-primary" : "btn-outline-primary"}`}
+                        onClick={() => setActiveDashboardTab(tab)}
+                        >
+                        {tab.toUpperCase()}
+                        </button>
+                    ))}
 
-  {/* Search Bar */}
-  <input
-    type="text"
-    className="form-control ms-auto w-25"
-    placeholder="Search contracts..."
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
-</div>
+                    {/* Search Bar */}
+                    <input
+                        type="text"
+                        className="form-control ms-auto w-25"
+                        placeholder="Search contracts..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                    </div>
 
               {filteredContracts.map(contract => (
                 <div key={contract.id} className="card contract-card p-3 mb-3">

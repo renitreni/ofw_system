@@ -10,7 +10,11 @@ import SuperAdmin from './pages/SuperAdmin';
 import AdminDashboard from './pages/AdminDashboard';
 import AgentPage from './pages/AgentPage';
 import ContractDetails from './pages/ContractDetails';
+// OFW PAGES
+//import OfwPage from './pages/OfwPage';
 import OfwPage from './pages/OfwPage';
+
+
 import SignUp from "./pages/SignUp";
 
 // ✅ SUPERADMIN PAGES
@@ -62,7 +66,11 @@ export default function Main() {
 
 
 
-                <Route path="/ofw/home" element={<OfwPage />} />
+                {/* ✅ OFW (SINGLE ENTRY POINT) */}
+                 <Route path="/ofw/*" element={<OfwPage />} />
+                        
+
+
                 <Route path="/register" element={<SignUp />} />
             </Routes>
         </BrowserRouter>
