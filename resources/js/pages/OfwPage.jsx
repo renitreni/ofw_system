@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../css/OfwPage.css";
 import {
@@ -12,12 +12,14 @@ import {
   Mail,
   Phone,
   Pencil,
+AlertTriangle,
 } from "lucide-react";
 
 
 export default function OfwPage() {
   const [activePage, setActivePage] = useState("dashboard");
   const [openPanel, setOpenPanel] = useState(null);
+ 
 
   const togglePanel = (panel) => {
     setOpenPanel(openPanel === panel ? null : panel);
@@ -37,7 +39,8 @@ export default function OfwPage() {
     position: "Registered Nurse",
     contract: "January 10, 2024",
     });
-
+ 
+    //Documents
     const [selectedFile, setSelectedFile] = useState(null);
     const [docName, setDocName] = useState("");
     const [docType, setDocType] = useState("");
@@ -60,47 +63,98 @@ export default function OfwPage() {
         return "Valid";
         };
   //Upload Document function
-    const handleUpload = () => {
-  if (!selectedFile || !docName) return;
+            const handleUpload = () => {
+        if (!selectedFile || !docName) return;
 
-  const newDoc = {
-    name: docName,
-    type: docType || "Other",
-    expiry: expiryDate,
-    status: getStatus(expiryDate),
-    uploaded: new Date().toLocaleDateString(),
-    fileUrl: URL.createObjectURL(selectedFile),
-  };
+        const newDoc = {
+            name: docName,
+            type: docType || "Other",
+            expiry: expiryDate,
+            status: getStatus(expiryDate),
+            uploaded: new Date().toLocaleDateString(),
+            fileUrl: URL.createObjectURL(selectedFile),
+        };
 
-  setDocuments([...documents, newDoc]);
+            setDocuments([...documents, newDoc]);
 
-  setSelectedFile(null);
-  setDocName("");
-  setDocType("");
-  setExpiryDate("");
+            setSelectedFile(null);
+            setDocName("");
+            setDocType("");
+            setExpiryDate("");
+            };
+        //Delete Document function
+        const deleteDocument = (index) => {
+        const updated = [...documents];
+        updated.splice(index, 1);
+        setDocuments(updated);
+        };
+        //Replace Document function
+        const replaceFile = (index, file) => {
+        if (!file) return;
+
+        const updated = [...documents];
+        updated[index].fileUrl = URL.createObjectURL(file);
+        updated[index].uploaded = new Date().toLocaleDateString();
+
+       setDocuments(updated);
+        };
+        const totalDocs = documents.length;
+        const validDocs = documents.filter(d => d.status === "Valid").length;
+        const expiringDocs = documents.filter(d => d.status === "Expiring").length;
+        const expiredDocs = documents.filter(d => d.status === "Expired").length;
+
+        //Emergency
+        const [showEmergencyPanel, setShowEmergencyPanel] = useState(false);
+      const [emergencyCode, setEmergencyCode] = useState("");
+
+     const [showComplaintForm, setShowComplaintForm] = useState(false);
+
+     //urgent button function
+     const [isLocating, setIsLocating] = useState(false);
+     const [locationError, setLocationError] = useState("");
+     const [userLocation, setUserLocation] = useState(null);
+
+     const handleUrgent = () => {
+  if (!navigator.geolocation) {
+    setLocationError("Geolocation is not supported by your browser.");
+    return;
+  }
+
+  setIsLocating(true);
+  setLocationError("");
+  setUserLocation(null);
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setUserLocation({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+      });
+      setIsLocating(false);
+    },
+    (error) => {
+      setLocationError("Unable to retrieve your location.");
+      setIsLocating(false);
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0,
+    }
+  );
 };
-//Delete Document function
-const deleteDocument = (index) => {
-  const updated = [...documents];
-  updated.splice(index, 1);
-  setDocuments(updated);
-};
-//Replace Document function
-const replaceFile = (index, file) => {
-  if (!file) return;
 
-  const updated = [...documents];
-  updated[index].fileUrl = URL.createObjectURL(file);
-  updated[index].uploaded = new Date().toLocaleDateString();
+// ✅ Place your useEffect here
+  useEffect(() => {
+    if (activePage === "urgent") {
+      handleUrgent();
+    }
+  }, [activePage]);
 
-  setDocuments(updated);
-};
-const totalDocs = documents.length;
-  const validDocs = documents.filter(d => d.status === "Valid").length;
-  const expiringDocs = documents.filter(d => d.status === "Expiring").length;
-  const expiredDocs = documents.filter(d => d.status === "Expired").length;
 
-  return (
+     //start
+         return (
     
     <div className="d-flex">
 
@@ -144,6 +198,12 @@ const totalDocs = documents.length;
           >
             <HelpCircle className="me-2" /> Support
           </li>
+          <li
+            className={`nav-item ${activePage === "rescue" ? "active" : ""}`}
+            onClick={() => setActivePage("rescue")}
+            >
+            <AlertTriangle className="me-2 text-danger" /> Rescue-Report
+            </li>
         </ul>
 
         <div className="footer small text-muted mt-auto">
@@ -158,9 +218,9 @@ const totalDocs = documents.length;
 
        {/* TOP BAR */}
         <div
-      className="topbar d-flex justify-content-between align-items-center p-3 position-relative"
-      style={{ backgroundColor: "#0d3b66" }}
-    >
+        className="topbar d-flex justify-content-between align-items-center p-3 position-relative"
+        style={{ backgroundColor: "#0d3b66" }}
+        >
       {/* LEFT */}
       <div>
         <h4 className="fw-bold mb-0 text-white">Welcome!</h4>
@@ -232,22 +292,22 @@ const totalDocs = documents.length;
 
           {/* ===== DASHBOARD ===== */}
            {activePage === "dashboard" && (
-    <>
-        <h4 className="fw-bold mb-4">Dashboard Overview</h4>
-        <p className="text-muted">Welcome to your OFW dashboard.</p>
+          <>
+            <h4 className="fw-bold mb-4">Dashboard Overview</h4>
+            <p className="text-muted">Welcome to your OFW dashboard.</p>
 
         {/* SUMMARY CARDS */}
-        <div className="row g-4 mt-1">
-        {[
+            <div className="row g-4 mt-1">
+            {[
             { title: "Active Contract", value: "12 months", icon: "/images/briefcase.png" },
             { title: "Documents", value: "8 Valid", icon: "/images/valid.png" },
             { title: "Days Abroad", value: "487", icon: "/images/appointment.png" },
             { title: "Remittances", value: "₱450K", icon: "/images/transfers.png" },
-        ].map((card, i) => (
-            <div className="col-md-3" key={i}>
-            <div className="card stat-card p-3 shadow-sm border-0">
-                <div className="d-flex justify-content-between align-items-center">
-                <div>
+            ].map((card, i) => (
+                <div className="col-md-3" key={i}>
+                <div className="card stat-card p-3 shadow-sm border-0">
+                    <div className="d-flex justify-content-between align-items-center">
+                    <div>
                     <small className="text-muted">{card.title}</small>
                     <h3 className="fw-bold mb-0" style={{ fontSize: "26px" }}>
                     {card.value}
@@ -730,25 +790,25 @@ const totalDocs = documents.length;
       </table>
     </div>
 
-    {/* UPLOAD MODAL */}
-<div className="modal fade" id="uploadModal">
-  <div className="modal-dialog modal-dialog-centered">
-    <div className="modal-content">
+            {/* UPLOAD MODAL */}
+        <div className="modal fade" id="uploadModal">
+        <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
 
-      <div className="modal-header">
-        <h5 className="modal-title">Upload Document</h5>
-        <button className="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+            <div className="modal-header">
+                <h5 className="modal-title">Upload Document</h5>
+                <button className="btn-close" data-bs-dismiss="modal"></button>
+            </div>
 
-      <div className="modal-body">
+            <div className="modal-body">
 
-        {/* Document Name */}
-        <label className="form-label">Document Name</label>
-        <input
-          className="form-control mb-3"
-          value={docName}
-          onChange={(e) => setDocName(e.target.value)}
-        />
+                {/* Document Name */}
+                <label className="form-label">Document Name</label>
+                <input
+                className="form-control mb-3"
+                value={docName}
+                onChange={(e) => setDocName(e.target.value)}
+                />
 
         {/* Type */}
         <label className="form-label">Type</label>
@@ -832,151 +892,415 @@ const totalDocs = documents.length;
 )}
 
 
-  {/* ===== SUPPORT ===== */}
+     {/* ===== SUPPORT ===== */}
 
        {activePage === "support" && (
         
+        <div className="p-4">
+
+            {/* HEADER */}
+            <div className="mb-4">
+            <h4 className="fw-bold mb-1">Support Center</h4>
+            <small className="text-muted">We're here to help you</small>
+            </div>
+
+            {/* SUPPORT OPTIONS */}
+            <div className="row g-4">
+
+            {/* Phone */}
+            <div className="col-md-4">
+                <div className="card text-center p-4 shadow-sm border-0 h-100">
+                <Phone size={30} className="text-primary mb-3" />
+                <h5 className="fw-bold">Phone Support</h5>
+                <p className="text-muted">+63 2 8722 0000</p>
+                <button className="btn btn-outline-primary btn-lg w-100">Call Now</button>
+                </div>
+            </div>
+
+            {/* Email */}
+            <div className="col-md-4">
+                <div className="card text-center p-4 shadow-sm border-0 h-100">
+                <Mail size={30} className="text-success mb-3" />
+                <h5 className="fw-bold">Email Support</h5>
+                <p className="text-muted">support@ofwportal.ph</p>
+                <button className="btn btn-outline-success btn-lg w-100">Send Email</button>
+                </div>
+            </div>
+
+            {/* Chat */}
+            <div className="col-md-4">
+                <div className="card text-center p-4 shadow-sm border-0 h-100">
+                <HelpCircle size={30} className="text-warning mb-3" />
+                <h5 className="fw-bold">Live Chat</h5>
+                <p className="text-muted">Available 24/7</p>
+                <button className="btn btn-outline-dark btn-lg w-100">Start Chat</button>
+                </div>
+            </div>
+
+            </div>
+
+            {/* EMERGENCY HOTLINES */}
+            <div className="card border-danger-subtle bg-danger-subtle p-4 mt-4 shadow-sm">
+            <div className="d-flex gap-3">
+                <Phone className="text-danger" size={28} />
+                <div>
+                <h5 className="fw-bold mb-2">Emergency Hotlines</h5>
+                <div className="text-muted">POLO-OWWA Hotline: 1348 (Philippines)</div>
+                <div className="text-muted">DFA Hotline: +63 2 8834 4000</div>
+                <div className="text-muted">Philippine Embassy: Contact nearest embassy</div>
+                </div>
+            </div>
+            </div>
+
+            {/* FAQ */}
+            <div className="card p-4 mt-4 shadow-sm border-0">
+            <h5 className="fw-bold mb-3">Frequently Asked Questions</h5>
+
+            <div className="mb-3">
+                <h6 className="fw-semibold">How do I renew my work visa?</h6>
+                <p className="text-muted mb-0">
+                Contact your employer at least 3 months before expiry.
+                </p>
+            </div>
+
+            <hr />
+
+            <div className="mb-3">
+                <h6 className="fw-semibold">What documents do I need to travel home?</h6>
+                <p className="text-muted mb-0">
+                Valid passport, OEC, and proof of employment.
+                </p>
+            </div>
+
+            <hr />
+
+            <div>
+                <h6 className="fw-semibold">What should I do in an emergency?</h6>
+                <p className="text-muted mb-0">
+                Contact your emergency contact and the Philippine embassy.
+                </p>
+            </div>
+            </div>
+
+                    {/* CONTACT FORM */}
+                    <div className="card p-4 mt-4 shadow-sm border-0">
+                    <h5 className="fw-bold mb-4">Send us a message</h5>
+
+                    <div className="mb-3">
+                        <label className="form-label fw-semibold">Subject</label>
+                        <input className="form-control" placeholder="What do you need help with?" />
+                    </div>
+
+                    <div className="mb-3">
+                        <label className="form-label fw-semibold">Category</label>
+                        <select className="form-select">
+                        <option>Select a category</option>
+                        <option>Account Issues</option>
+                        <option>Document Assistance</option>
+                        <option>Employment Concerns</option>
+                        <option>Technical Support</option>
+                        </select>
+                    </div>
+
+                    <div className="mb-4">
+                        <label className="form-label fw-semibold">Message</label>
+                        <textarea
+                        className="form-control"
+                        rows="4"
+                        placeholder="Describe your issue..."
+                        />
+                    </div>
+
+                    <button className="btn btn-primary btn-lg w-100">
+                        Submit Request
+                    </button>
+                    </div>
+
+                </div>
+                )}
+                {/* ===== RESCUE REPORT ===== */}
+{activePage === "rescue" && (
+  <div className="p-4 d-flex justify-content-center align-items-center" style={{ minHeight: "70vh" , backgroundImage: "url('/images/support.webp')", backgroundSize: "cover", borderRadius: "16px" }}>
+  
+    {/* EMERGENCY BUTTON */}
+    {!showEmergencyPanel && (
+      <button
+        className="btn btn-danger btn-lg px-5 py-4 fw-bold"
+        style={{ fontSize: "22px", borderRadius: "16px" }}
+        onClick={() => setShowEmergencyPanel(true)}
+      >
+        🚨 EMERGENCY
+      </button>
+    )}
+
+    {/* CENTER PANEL */}
+    {showEmergencyPanel && (
+      <div
+        className="card shadow-lg border-0 p-4"
+        style={{
+          width: "100%",
+          maxWidth: "420px",
+          borderRadius: "16px",
+        }}
+      >
+        {/* HEADER */}
+        <h4 className="fw-bold text-center mb-3">
+          OFW Tabang Services
+        </h4>
+
+        <p className="text-muted text-center mb-4">
+          Please enter code
+        </p>
+
+        {/* CODE INPUT */}
+        <input
+          type="text"
+          className="form-control mb-4 text-center"
+          placeholder="Enter emergency code"
+          value={emergencyCode}
+          onChange={(e) => setEmergencyCode(e.target.value)}
+        />
+
+        <div className="d-flex flex-column gap-3">
+           <button
+            className="btn btn-outline-primary w-100 py-2"
+            onClick={() => setActivePage("complaint")}
+            >
+            Complaint
+            </button>
+
+            <button
+        className="btn btn-danger w-100 py-2"
+        onClick={() => setActivePage("urgent")}
+        >
+        Urgent
+        </button>
+        </div>
+
+       
+
+        {/* BACK */}
+        <button
+          className="btn btn-link mt-3 text-muted"
+          onClick={() => {
+            setShowEmergencyPanel(false);
+            setEmergencyCode("");
+          }}
+        >
+          ← Back
+        </button>
+      </div>
+    )}
+  </div>
+)}
+{/* ===== COMPLAINT PAGE ===== */}
+{activePage === "complaint" && (
   <div className="p-4">
 
-    {/* HEADER */}
-    <div className="mb-4">
-      <h4 className="fw-bold mb-1">Support Center</h4>
-      <small className="text-muted">We're here to help you</small>
-    </div>
+    <h4 className="fw-bold mb-4">Complaint Form</h4>
 
-    {/* SUPPORT OPTIONS */}
-    <div className="row g-4">
+    {/* ================= GENERAL INFORMATION ================= */}
+    <div className="card p-4 mb-4 shadow-sm border-0">
+      <h6 className="fw-bold mb-4">General Information</h6>
 
-      {/* Phone */}
-      <div className="col-md-4">
-        <div className="card text-center p-4 shadow-sm border-0 h-100">
-          <Phone size={30} className="text-primary mb-3" />
-          <h5 className="fw-bold">Phone Support</h5>
-          <p className="text-muted">+63 2 8722 0000</p>
-          <button className="btn btn-outline-primary btn-lg w-100">Call Now</button>
+      <div className="row g-3">
+        <div className="col-md-6">
+          <label className="form-label">Foreign Recruitment Agency</label>
+          <input className="form-control" placeholder="None" />
         </div>
-      </div>
 
-      {/* Email */}
-      <div className="col-md-4">
-        <div className="card text-center p-4 shadow-sm border-0 h-100">
-          <Mail size={30} className="text-success mb-3" />
-          <h5 className="fw-bold">Email Support</h5>
-          <p className="text-muted">support@ofwportal.ph</p>
-          <button className="btn btn-outline-success btn-lg w-100">Send Email</button>
+        <div className="col-md-6">
+          <label className="form-label">OFW's Full Name</label>
+          <input className="form-control" />
         </div>
-      </div>
 
-      {/* Chat */}
-      <div className="col-md-4">
-        <div className="card text-center p-4 shadow-sm border-0 h-100">
-          <HelpCircle size={30} className="text-warning mb-3" />
-          <h5 className="fw-bold">Live Chat</h5>
-          <p className="text-muted">Available 24/7</p>
-          <button className="btn btn-outline-dark btn-lg w-100">Start Chat</button>
+        <div className="col-md-4">
+          <label className="form-label">Gender</label>
+          <select className="form-select">
+            <option>None</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
         </div>
-      </div>
 
-    </div>
+        <div className="col-md-4">
+          <label className="form-label">Birthdate</label>
+          <input type="date" className="form-control" />
+        </div>
 
-    {/* EMERGENCY HOTLINES */}
-    <div className="card border-danger-subtle bg-danger-subtle p-4 mt-4 shadow-sm">
-      <div className="d-flex gap-3">
-        <Phone className="text-danger" size={28} />
-        <div>
-          <h5 className="fw-bold mb-2">Emergency Hotlines</h5>
-          <div className="text-muted">POLO-OWWA Hotline: 1348 (Philippines)</div>
-          <div className="text-muted">DFA Hotline: +63 2 8834 4000</div>
-          <div className="text-muted">Philippine Embassy: Contact nearest embassy</div>
+        <div className="col-md-4">
+          <label className="form-label">Occupation</label>
+          <input className="form-control" />
+        </div>
+
+        <div className="col-md-6">
+          <label className="form-label">National / ISEMA ID</label>
+          <input className="form-control" />
+        </div>
+
+        <div className="col-md-6">
+          <label className="form-label">Passport No.</label>
+          <input className="form-control" />
         </div>
       </div>
     </div>
 
-    {/* FAQ */}
-    <div className="card p-4 mt-4 shadow-sm border-0">
-      <h5 className="fw-bold mb-3">Frequently Asked Questions</h5>
+    {/* ================= CONTACT INFORMATION ================= */}
+    <div className="card p-4 mb-4 shadow-sm border-0">
+      <h6 className="fw-bold mb-4">Contact Information</h6>
 
-      <div className="mb-3">
-        <h6 className="fw-semibold">How do I renew my work visa?</h6>
-        <p className="text-muted mb-0">
-          Contact your employer at least 3 months before expiry.
-        </p>
-      </div>
+      <div className="row g-3">
+        <div className="col-md-6">
+          <label className="form-label">E-mail</label>
+          <input type="email" className="form-control" />
+        </div>
 
-      <hr />
+        <div className="col-md-6">
+          <label className="form-label">Contact Person</label>
+          <input className="form-control" />
+        </div>
 
-      <div className="mb-3">
-        <h6 className="fw-semibold">What documents do I need to travel home?</h6>
-        <p className="text-muted mb-0">
-          Valid passport, OEC, and proof of employment.
-        </p>
-      </div>
+        <div className="col-md-6">
+          <label className="form-label">Primary Contact</label>
+          <input className="form-control" />
+        </div>
 
-      <hr />
+        <div className="col-md-6">
+          <label className="form-label">Secondary Contact</label>
+          <input className="form-control" />
+        </div>
 
-      <div>
-        <h6 className="fw-semibold">What should I do in an emergency?</h6>
-        <p className="text-muted mb-0">
-          Contact your emergency contact and the Philippine embassy.
-        </p>
+        <div className="col-12">
+          <label className="form-label">Address Abroad</label>
+          <textarea className="form-control" rows="2" />
+        </div>
       </div>
     </div>
 
-    {/* CONTACT FORM */}
-    <div className="card p-4 mt-4 shadow-sm border-0">
-      <h5 className="fw-bold mb-4">Send us a message</h5>
+    {/* ================= IMAGE EVIDENCES ================= */}
+    <div className="card p-4 mb-4 shadow-sm border-0">
+      <h6 className="fw-bold mb-4">Image Evidences</h6>
 
-      <div className="mb-3">
-        <label className="form-label fw-semibold">Subject</label>
-        <input className="form-control" placeholder="What do you need help with?" />
-      </div>
+      <div className="row g-3">
+        <div className="col-md-4">
+          <label className="form-label">Image 1</label>
+          <input type="file" className="form-control" />
+        </div>
 
-      <div className="mb-3">
-        <label className="form-label fw-semibold">Category</label>
-        <select className="form-select">
-          <option>Select a category</option>
-          <option>Account Issues</option>
-          <option>Document Assistance</option>
-          <option>Employment Concerns</option>
-          <option>Technical Support</option>
-        </select>
-      </div>
+        <div className="col-md-4">
+          <label className="form-label">Image 2</label>
+          <input type="file" className="form-control" />
+        </div>
 
-      <div className="mb-4">
-        <label className="form-label fw-semibold">Message</label>
-        <textarea
-          className="form-control"
-          rows="4"
-          placeholder="Describe your issue..."
-        />
+        <div className="col-md-4">
+          <label className="form-label">Image 3</label>
+          <input type="file" className="form-control" />
+        </div>
       </div>
+    </div>
+
+    {/* ================= COMPLAINT SECTION ================= */}
+    <div className="card p-4 shadow-sm border-0">
+      <h6 className="fw-bold mb-4">Complaint Section</h6>
+
+      <label className="form-label">Complaint</label>
+      <textarea
+        className="form-control mb-4"
+        rows="5"
+        placeholder="Describe your complaint in detail..."
+      />
 
       <button className="btn btn-primary btn-lg w-100">
-        Submit Request
+        Submit Complaint
+      </button>
+
+      <button
+        className="btn btn-link w-100 mt-3"
+        onClick={() => setActivePage("rescue")}
+      >
+        ← Back to Rescue Report
       </button>
     </div>
 
   </div>
 )}
-</div>
-</div>
-</div>
-);
-}
-const InfoItem = ({ label, value, editing, onChange }) => (
-  <div className="mb-3">
-    <div className="text-muted small">{label}</div>
+{/* ===== URGENT PAGE ===== */}
+{activePage === "urgent" && (
+  <div className="p-4">
+    <h4 className="fw-bold mb-4 text-danger">
+      Emergency Location
+    </h4>
 
-    {editing ? (
-      <input
-        className="form-control"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    ) : (
-      <div className="fw-semibold">{value}</div>
+    {/* LOADING */}
+    {isLocating && (
+      <div className="text-center mt-5">
+        <div className="spinner-border text-danger mb-3" />
+        <div className="fw-semibold">
+          Please wait… we are searching your location
+        </div>
+      </div>
     )}
+
+    {/* MAP */}
+    {userLocation && (
+      <div className="card p-3 shadow-sm border-0">
+        <h6 className="fw-bold mb-3">📍 Your Exact Location</h6>
+
+        <div style={{ height: "350px" }}>
+          <iframe
+            title="User Location"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+            src={`https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}&z=17&output=embed`}
+          />
+        </div>
+
+        <div className="mt-3 small">
+          <div><strong>Latitude:</strong> {userLocation.lat}</div>
+          <div><strong>Longitude:</strong> {userLocation.lng}</div>
+        </div>
+      </div>
+    )}
+
+    {/* ERROR */}
+    {locationError && (
+      <div className="alert alert-danger">
+        {locationError}
+      </div>
+    )}
+
+    {/* BACK */}
+    <button
+      className="btn btn-link mt-4"
+      onClick={() => setActivePage("rescue")}
+    >
+      ← Back to Rescue Report
+    </button>
   </div>
-);
+)}
+                </div>
+                </div>
+                </div>
+                );
+                }
+            const InfoItem = ({ label, value, editing, onChange }) => (
+            <div className="mb-3">
+                <div className="text-muted small">{label}</div>
+
+                {editing ? (
+                <input
+                    className="form-control"
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                />
+                ) : (
+                <div className="fw-semibold">{value}</div>
+                )}
+            </div>
+            );
 
 
