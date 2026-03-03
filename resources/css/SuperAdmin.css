@@ -55,3 +55,35 @@
     background: #2563eb;
     color: #fff;
 }
+
+.superadmin-layout {
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #0d3b66;
+  color: white;
+}
+
+.sidebar-link {
+  color: white;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.sidebar-link.active {
+  background-color: white;
+  color: #0d3b66;
+  font-weight: 600;
+}
+
+.content-area {
+  background-color: #f8f9fa;
+}

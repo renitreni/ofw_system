@@ -62,7 +62,7 @@ export default function OfwPage() {
 
         return "Valid";
         };
-  //Upload Document function
+        //Upload Document function
             const handleUpload = () => {
         if (!selectedFile || !docName) return;
 
@@ -105,7 +105,7 @@ export default function OfwPage() {
 
         //Emergency
         const [showEmergencyPanel, setShowEmergencyPanel] = useState(false);
-      const [emergencyCode, setEmergencyCode] = useState("");
+       const [emergencyCode, setEmergencyCode] = useState("");
 
      const [showComplaintForm, setShowComplaintForm] = useState(false);
 
