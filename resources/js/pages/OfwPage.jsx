@@ -1,1306 +1,541 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../css/OfwPage.css";
 import {
-  Bell,
-  Settings,
-  Home,
-  User,
-  Briefcase,
-  FileText,
-  HelpCircle,
-  Mail,
-  Phone,
-  Pencil,
-AlertTriangle,
+  Bell, Settings, Home, User, Briefcase, FileText, 
+  Phone, Pencil, AlertTriangle, Star, ShieldCheck, 
+  Download, MapPin, Search, Calendar, CreditCard, ChevronRight, Mail, Check, X
 } from "lucide-react";
-
 
 export default function OfwPage() {
   const [activePage, setActivePage] = useState("dashboard");
-  const [openPanel, setOpenPanel] = useState(null);
- 
+  const [showEmergencyPanel, setShowEmergencyPanel] = useState(false);
 
-  const togglePanel = (panel) => {
-    setOpenPanel(openPanel === panel ? null : panel);
-  };
+  const PH_BLUE = "#0038A8";
+  const PH_RED = "#CE1126";
+  const PH_YELLOW = "#FCD116";
 
-   const [isEditing, setIsEditing] = useState(false);
-
-    const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState({
     name: "Maria Santos",
     title: "Registered Nurse",
     email: "maria.santos@email.com",
-    phone: "+971 50 123 4567",
-    dob: "March 15, 1990",
-    nationality: "Filipino",
-    passport: "P1234567A",
+    passport: "P1234567B",
     employer: "Dubai Healthcare Center",
-    position: "Registered Nurse",
-    contract: "January 10, 2024",
-    });
- 
-    //Documents
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [docName, setDocName] = useState("");
-    const [docType, setDocType] = useState("");
-    const [expiryDate, setExpiryDate] = useState("");
+    salary: "AED 8,500",
+    departure: "Jan 12, 2024",
+    agencyName: "Alpha Global Recruitment Inc.",
+    agencyPhone: "+63 2 8123 4567",
+    agencyEmail: "support@alphaglobal.ph",
+  });
 
-    //Documents
-    const [documents, setDocuments] = useState([]);
-    const [previewFile, setPreviewFile] = useState(null);
 
-    const getStatus = (expiryDate) => {
-        if (!expiryDate) return "Valid";
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempProfile, setTempProfile] = useState({ ...profile });
 
-        const today = new Date();
-        const expiry = new Date(expiryDate);
-        const diffDays = (expiry - today) / (1000 * 60 * 60 * 24);
+  const handleSaveProfile = () => {
+    setProfile({ ...tempProfile });
+    setIsEditing(false);
+  };
+  const [searchQuery, setSearchQuery] = useState("");
+  const [applyingId, setApplyingId] = useState(null);
+  
+  const initialJobs = [
+    { id: 1, t: "Registered Nurse", l: "London, UK", a: "AED 12k - 15k", h: "DMW-Verified" },
+    { id: 2, t: "Civil Engineer", l: "Dammam, KSA", a: "SAR 8k - 10k", h: "Priority" },
+    { id: 3, t: "Hospitality Crew", l: "Tokyo, Japan", a: "JPY 250k+", h: "New" }
+  ];
 
-        if (diffDays < 0) return "Expired";
-        if (diffDays <= 30) return "Expiring";
-
-        return "Valid";
-        };
-  //Upload Document function
-            const handleUpload = () => {
-        if (!selectedFile || !docName) return;
-
-        const newDoc = {
-            name: docName,
-            type: docType || "Other",
-            expiry: expiryDate,
-            status: getStatus(expiryDate),
-            uploaded: new Date().toLocaleDateString(),
-            fileUrl: URL.createObjectURL(selectedFile),
-        };
-
-            setDocuments([...documents, newDoc]);
-
-            setSelectedFile(null);
-            setDocName("");
-            setDocType("");
-            setExpiryDate("");
-            };
-        //Delete Document function
-        const deleteDocument = (index) => {
-        const updated = [...documents];
-        updated.splice(index, 1);
-        setDocuments(updated);
-        };
-        //Replace Document function
-        const replaceFile = (index, file) => {
-        if (!file) return;
-
-        const updated = [...documents];
-        updated[index].fileUrl = URL.createObjectURL(file);
-        updated[index].uploaded = new Date().toLocaleDateString();
-
-       setDocuments(updated);
-        };
-        const totalDocs = documents.length;
-        const validDocs = documents.filter(d => d.status === "Valid").length;
-        const expiringDocs = documents.filter(d => d.status === "Expiring").length;
-        const expiredDocs = documents.filter(d => d.status === "Expired").length;
-
-        //Emergency
-        const [showEmergencyPanel, setShowEmergencyPanel] = useState(false);
-      const [emergencyCode, setEmergencyCode] = useState("");
-
-     const [showComplaintForm, setShowComplaintForm] = useState(false);
-
-     //urgent button function
-     const [isLocating, setIsLocating] = useState(false);
-     const [locationError, setLocationError] = useState("");
-     const [userLocation, setUserLocation] = useState(null);
-
-     const handleUrgent = () => {
-  if (!navigator.geolocation) {
-    setLocationError("Geolocation is not supported by your browser.");
-    return;
-  }
-
-  setIsLocating(true);
-  setLocationError("");
-  setUserLocation(null);
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      setUserLocation({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-        accuracy: position.coords.accuracy,
-      });
-      setIsLocating(false);
-    },
-    (error) => {
-      setLocationError("Unable to retrieve your location.");
-      setIsLocating(false);
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 15000,
-      maximumAge: 0,
-    }
+  const filteredJobs = initialJobs.filter(job => 
+    job.t.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    job.l.toLowerCase().includes(searchQuery.toLowerCase())
   );
-};
 
-// ✅ Place your useEffect here
-  useEffect(() => {
-    if (activePage === "urgent") {
-      handleUrgent();
-    }
-  }, [activePage]);
+  const handleApply = (jobId, title) => {
+    setApplyingId(jobId);
+    setTimeout(() => {
+      alert(`Application for ${title} submitted successfully!`);
+      setApplyingId(null);
+    }, 1500);
+  };
 
+  const [documents, setDocuments] = useState([
+    { n: "Employment Contract", d: "Jan 10, 2024", s: "450 KB" },
+    { n: "OEC Certificate", d: "Feb 15, 2024", s: "1.2 MB" },
+    { n: "Visa Entry Permit", d: "Jan 05, 2024", s: "890 KB" },
+    { n: "Insurance Policy", d: "Jan 12, 2024", s: "2.1 MB" }
+  ]);
 
-     //start
-         return (
-    
-    <div className="d-flex">
+  const [newDocName, setNewDocName] = useState("");
 
-      {/* ================= SIDEBAR ================= */}
-      <div className="sidebar p-3">
-        <h3 className="fw-bold text-primary">OFW Portal</h3>
-        <p className="text-muted small">Overseas Filipino Workers</p>
+  const handleUpload = (e) => {
+    e.preventDefault();
+    if (!newDocName) return;
+    const docEntry = {
+      n: newDocName,
+      d: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      s: (Math.random() * (2.5 - 0.5) + 0.5).toFixed(1) + " MB"
+    };
+    setDocuments([docEntry, ...documents]);
+    setNewDocName("");
+    const modalElement = document.getElementById('uploadModal');
+    const modal = window.bootstrap.Modal.getInstance(modalElement);
+    modal.hide();
+  };
 
-        <ul className="nav flex-column mt-4">
-          <li
-            className={`nav-item ${activePage === "dashboard" ? "active" : ""}`}
-            onClick={() => setActivePage("dashboard")}
-          >
-            <Home className="me-2" /> Dashboard
-          </li>
+  return (
+    <div className="d-flex" style={{ height: "100vh", backgroundColor: "#f4f7f9", overflow: "hidden" }}>
+      <style>{`
+        .sidebar { width: 280px; background: ${PH_BLUE}; color: white; height: 100vh; position: sticky; top: 0; flex-shrink: 0; display: flex; flex-direction: column; overflow-y: auto; }
+        .main-wrapper { flex-grow: 1; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .nav-item { padding: 12px 20px; cursor: pointer; color: rgba(255,255,255,0.7); transition: 0.2s; border-radius: 10px; margin: 4px 15px; display: flex; align-items: center; font-weight: 500; text-decoration: none; }
+        .nav-item:hover { background: rgba(255,255,255,0.1); color: ${PH_YELLOW}; }
+        .nav-item.active { background: white; color: ${PH_BLUE}; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .nav-item.rescue-nav { color: #ffb3b3; border: 1px solid rgba(255,255,255,0.1); }
+        .nav-item.rescue-nav.active { background: ${PH_RED}; color: white; border: none; }
+        .topbar { background: white; border-bottom: 3px solid ${PH_YELLOW}; position: sticky; top: 0; z-index: 1001; }
+        .card { border-radius: 15px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .btn-ph-blue { background-color: ${PH_BLUE}; color: white; transition: 0.3s; border: none; }
+        .btn-ph-blue:hover { background-color: #002a7a; color: white; }
+        .pulse-red { animation: pulse-animation 2s infinite; background-color: ${PH_RED}; border: none; }
+        @keyframes pulse-animation { 0% { box-shadow: 0 0 0 0px rgba(206, 17, 38, 0.7); } 100% { box-shadow: 0 0 0 15px rgba(206, 17, 38, 0); } }
+        .form-control:focus { border-color: ${PH_BLUE}; box-shadow: 0 0 0 0.25rem rgba(0, 56, 168, 0.1); }
+      `}</style>
 
-          <li
-            className={`nav-item ${activePage === "profile" ? "active" : ""}`}
-            onClick={() => setActivePage("profile")}
-          >
-            <User className="me-2" /> Profile
-          </li>
-
-          <li
-            className={`nav-item ${activePage === "jobs" ? "active" : ""}`}
-            onClick={() => setActivePage("jobs")}
-          >
-            <Briefcase className="me-2" /> Jobs
-          </li>
-
-          <li
-            className={`nav-item ${activePage === "documents" ? "active" : ""}`}
-            onClick={() => setActivePage("documents")}
-          >
-            <FileText className="me-2" /> Documents
-          </li>
-
-          <li
-            className={`nav-item ${activePage === "support" ? "active" : ""}`}
-            onClick={() => setActivePage("support")}
-          >
-            <HelpCircle className="me-2" /> Support
-          </li>
-          <li
-            className={`nav-item ${activePage === "rescue" ? "active" : ""}`}
-            onClick={() => setActivePage("rescue")}
-            >
-            <AlertTriangle className="me-2 text-danger" /> Rescue-Report
-            </li>
-        </ul>
-
-        <div className="footer small text-muted mt-auto">
-          © 2026 OFW Portal
+      {}
+      <div className="sidebar shadow">
+        <div className="p-4 text-center">
+          <div className="d-inline-block p-2 rounded-circle mb-2" style={{border: `2px dashed ${PH_YELLOW}`}}>
+             <Star fill={PH_YELLOW} color={PH_YELLOW} size={30} />
+          </div>
+          <h5 className="fw-bold mb-0">Bagong Bayani</h5>
+          <small className="opacity-75">OFW Global Portal</small>
+        </div>
+        <div className="nav-container">
+          <div className={`nav-item ${activePage === "dashboard" ? "active" : ""}`} onClick={() => {setActivePage("dashboard"); setShowEmergencyPanel(false);}}><Home className="me-3" size={18}/> Dashboard</div>
+          <div className={`nav-item ${activePage === "profile" ? "active" : ""}`} onClick={() => {setActivePage("profile"); setShowEmergencyPanel(false);}}><User className="me-3" size={18}/> My Profile</div>
+          <div className={`nav-item ${activePage === "documents" ? "active" : ""}`} onClick={() => {setActivePage("documents"); setShowEmergencyPanel(false);}}><FileText className="me-3" size={18}/> Documents</div>
+          <div className={`nav-item ${activePage === "jobs" ? "active" : ""}`} onClick={() => {setActivePage("jobs"); setShowEmergencyPanel(false);}}><Briefcase className="me-3" size={18}/> Job Postings</div>
+          <div className="px-4 mt-4 mb-2"><small className="text-uppercase opacity-50 fw-bold" style={{fontSize: '10px'}}>Emergency</small></div>
+          <div className={`nav-item rescue-nav ${activePage === "rescue" ? "active" : ""}`} onClick={() => setActivePage("rescue")}><AlertTriangle className="me-3" size={18}/> Rescue & SOS</div>
         </div>
       </div>
 
- 
-
-      {/* ================= MAIN ================= */}
-      <div className="flex-grow-1">
-
-       {/* TOP BAR */}
-        <div
-        className="topbar d-flex justify-content-between align-items-center p-3 position-relative"
-        style={{ backgroundColor: "#0d3b66" }}
-        >
-      {/* LEFT */}
-      <div>
-        <h4 className="fw-bold mb-0 text-white">Welcome!</h4>
-        <small className="text-white-50">Manage your OFW journey</small>
-      </div>
-
-      {/* RIGHT */}
-      <div className="d-flex align-items-center gap-3 text-white position-relative">
-        
-        {/* NOTIFICATION */}
-        <div className="position-relative">
-          <Bell size={20} style={{ cursor: "pointer" }} onClick={() => togglePanel("notif")} />
-
-          {openPanel === "notif" && (
-            <div className="dropdown-panel">
-              <strong>Notifications</strong>
-              <ul>
-                <li>New message received</li>
-                <li>Profile updated</li>
-                <li>Job alert available</li>
-              </ul>
+      {/* MAIN CONTENT AREA */}
+      <div className="main-wrapper">
+        <div className="topbar d-flex justify-content-between align-items-center p-3 px-4 shadow-sm">
+          <h6 className="fw-bold mb-0 text-dark">Portal / <span className="text-capitalize text-muted">{activePage}</span></h6>
+          <div className="d-flex gap-3 align-items-center">
+            <div className="position-relative p-2 rounded-circle bg-light">
+                <Bell size={20} className="text-muted" />
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-danger" style={{padding: '3px 6px', fontSize: '9px'}}>2</span>
             </div>
-          )}
+            <div className="vr mx-1"></div>
+            <div className="d-flex align-items-center gap-2">
+                <span className="small fw-bold d-none d-md-block">{profile.name}</span>
+                <img src={`https://ui-avatars.com/api/?name=${profile.name}&background=0038A8&color=fff`} width="35" className="rounded-circle border" alt="profile"/>
+            </div>
+          </div>
         </div>
 
-        {/* SETTINGS */}
-        <div className="position-relative">
-          <Settings size={20} style={{ cursor: "pointer" }} onClick={() => togglePanel("settings")} />
-
-          {openPanel === "settings" && (
-            <div className="dropdown-panel">
-              <ul>
-                <li>Account Settings</li>
-                <li>Privacy</li>
-                <li>Help & Support</li>
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* PROFILE */}
-        <div className="position-relative d-flex align-items-center gap-2">
-          <img
-            src="/images/woman.png"
-            alt="profile"
-            className="rounded-circle"
-            width="40"
-            style={{ cursor: "pointer" }}
-            onClick={() => togglePanel("profile")}
-          />
-
-          {openPanel === "profile" && (
-            <div className="dropdown-panel">
-              <strong>Maria Santos</strong>
-              <p className="mb-1">Healthcare Worker</p>
-              <hr />
-              <button className="btn btn-sm btn-outline-primary w-100">View Profile</button>
-              <button className="btn btn-sm btn-outline-danger w-100 mt-2">Logout</button>
-            </div>
-          )}
-        </div>
-
-      </div>
-    </div>
-
-
-        {/* ================= CONTENT ================= */}
         <div className="container-fluid p-4">
+          
+          {/* DASHBOARD */}
+          {activePage === "dashboard" && (
+            <div className="animate__animated animate__fadeIn">
+              <div className="row g-3">
+                {[
+                  { t: "OEC Status", v: "Verified", c: PH_BLUE, icon: <ShieldCheck size={16}/> },
+                  { t: "SSS Premium", v: "Active", c: PH_BLUE, icon: <CreditCard size={16}/> },
+                  { t: "OWWA Validity", v: "24 Months", c: PH_RED, icon: <Calendar size={16}/> },
+                  { t: "Pag-IBIG", v: "Updated", c: PH_RED, icon: <Star size={16}/> }
+                ].map((s, i) => (
+                  <div className="col-md-3 col-6" key={i}>
+                    <div className="card p-3 border-0 shadow-sm h-100 transition-hover" style={{ borderLeft: `4px solid ${s.c}` }}>
+                      <div className="d-flex align-items-center gap-2 mb-1">
+                        <span style={{ color: s.c }}>{s.icon}</span>
+                        <small className="text-muted fw-bold text-uppercase" style={{ fontSize: '10px', letterSpacing: '0.5px' }}>{s.t}</small>
+                      </div>
+                      <h5 className="fw-bold mb-0" style={{ color: s.c, fontSize: '1.1rem' }}>{s.v}</h5>
+                    </div>
+                  </div>
+                ))}
+              </div>
 
-          {/* ===== DASHBOARD ===== */}
-           {activePage === "dashboard" && (
-          <>
-            <h4 className="fw-bold mb-4">Dashboard Overview</h4>
-            <p className="text-muted">Welcome to your OFW dashboard.</p>
-
-        {/* SUMMARY CARDS */}
-            <div className="row g-4 mt-1">
-            {[
-            { title: "Active Contract", value: "12 months", icon: "/images/briefcase.png" },
-            { title: "Documents", value: "8 Valid", icon: "/images/valid.png" },
-            { title: "Days Abroad", value: "487", icon: "/images/appointment.png" },
-            { title: "Remittances", value: "₱450K", icon: "/images/transfers.png" },
-            ].map((card, i) => (
-                <div className="col-md-3" key={i}>
-                <div className="card stat-card p-3 shadow-sm border-0">
-                    <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                    <small className="text-muted">{card.title}</small>
-                    <h3 className="fw-bold mb-0" style={{ fontSize: "26px" }}>
-                    {card.value}
-                    </h3>
+              {/* AGENCY CONTACT CENTER SECTION */}
+              <div className="card mt-4 border-0 shadow-sm overflow-hidden">
+                <div className="row g-0">
+                  <div className="col-lg-7 p-4 bg-white">
+                    <div className="d-flex align-items-start gap-3 mb-4">
+                      <div className="p-3 rounded-4 bg-light text-ph-blue shadow-sm">
+                        <ShieldCheck size={32} />
+                      </div>
+                      <div>
+                        <div className="badge bg-success bg-opacity-10 text-success mb-1 px-2 border border-success border-opacity-25">DMW Verified</div>
+                        <h4 className="fw-bold mb-0 text-dark">{profile.agencyName}</h4>
+                        <p className="text-muted small mb-0">Official POEA License: 123-RE-2024-00-PR</p>
+                      </div>
+                    </div>
+                    <div className="row g-3">
+                      <div className="col-sm-6">
+                        <button className="btn btn-ph-blue w-100 fw-bold py-2 d-flex align-items-center justify-content-center gap-2 shadow-sm" onClick={() => alert(`Calling Welfare Officer...`)}>
+                          <Phone size={18} /> Contact Welfare Officer
+                        </button>
+                      </div>
+                      <div className="col-sm-6">
+                        <button className="btn btn-outline-dark w-100 fw-bold py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#contractModal">
+                          View Contract Details
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-lg-5 p-4" style={{ backgroundColor: "#f8f9fa", borderLeft: "1px solid #eee" }}>
+                    <h6 className="fw-bold text-uppercase mb-3" style={{ fontSize: '11px', color: PH_BLUE, letterSpacing: '1px' }}>Agency Contact Center</h6>
+                    <div className="d-flex flex-column gap-2">
+                      <div className="bg-white p-3 rounded-3 shadow-sm border border-light d-flex align-items-center gap-3">
+                        <div className="p-2 rounded-circle bg-primary bg-opacity-10 text-primary"><Phone size={18} /></div>
+                        <div>
+                          <small className="text-muted d-block" style={{ fontSize: '10px' }}>HOTLINE</small>
+                          <span className="fw-bold text-dark">{profile.agencyPhone}</span>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-3 shadow-sm border border-light d-flex align-items-center gap-3">
+                        <div className="p-2 rounded-circle bg-danger bg-opacity-10 text-danger"><Mail size={18} /></div>
+                        <div>
+                          <small className="text-muted d-block" style={{ fontSize: '10px' }}>EMAIL SUPPORT</small>
+                          <span className="fw-bold text-dark">{profile.agencyEmail}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-3 d-flex align-items-center gap-2">
+                      <span className="position-relative d-inline-flex">
+                          <span className="position-absolute translate-middle p-1 bg-success border border-light rounded-circle animate-pulse" style={{left: '10px', top: '10px'}}></span>
+                          <span className="p-1 bg-success bg-opacity-20 rounded-circle" style={{width: '20px', height: '20px'}}></span>
+                      </span>
+                      <small className="fw-bold text-success">Welfare Officer is Online</small>
+                    </div>
+                  </div>
                 </div>
-                <div className="icon-box">
-                    <img src={card.icon} width="26" height="26" alt="" />
+              </div>
+
+              {/* CONTRACT MODAL */}
+              <div className="modal fade" id="contractModal" tabIndex="-1" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered">
+                  <div className="modal-content border-0 shadow-lg" style={{ borderRadius: '20px' }}>
+                    <div className="modal-header border-0 pb-0 px-4 pt-4">
+                      <h5 className="fw-bold mb-0">Contract Overview</h5>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div className="modal-body p-4">
+                      <div className="bg-light p-3 rounded-4 mb-4 border border-light">
+                        <div className="row g-3">
+                          <div className="col-6">
+                            <small className="text-muted d-block text-uppercase fw-bold" style={{fontSize: '9px'}}>Employer</small>
+                            <span className="fw-bold text-ph-blue small">{profile.employer}</span>
+                          </div>
+                          <div className="col-6 text-end">
+                            <small className="text-muted d-block text-uppercase fw-bold" style={{fontSize: '9px'}}>Salary</small>
+                            <span className="fw-bold text-success">{profile.salary}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="list-group list-group-flush small">
+                        {[{l:"Passport", v:profile.passport}, {l:"Job Title", v:profile.title}, {l:"Departure", v:profile.departure}].map((item, idx) => (
+                          <div key={idx} className="list-group-item d-flex justify-content-between px-0 py-3">
+                            <span className="text-muted">{item.l}</span>
+                            <span className="fw-bold">{item.v}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <button className="btn btn-ph-blue w-100 mt-4 py-2 fw-bold rounded-pill" data-bs-dismiss="modal">Close</button>
+                    </div>
+                  </div>
                 </div>
-                </div>
+              </div>
             </div>
-            </div>
-        ))}
-        </div>
+          )}
 
-        {/* CONTENT ROW */}
-        <div className="row mt-4 g-4">
-        
-        {/* RECENT ACTIVITIES */}
-        <div className="col-md-6">
-            <div className="card p-4 h-100 shadow-sm border-0">
-            <h5 className="fw-bold mb-3">Recent Activities</h5>
-
-            <div className="activity mb-3">
-                <strong>Document Verified</strong>
-                <div className="text-muted small">Passport renewed successfully</div>
-                <small className="text-muted">2 hours ago</small>
-            </div>
-
-            <div className="activity mb-3">
-                <strong>Remittance Sent</strong>
-                <div className="text-muted small">₱25,000 sent to family</div>
-                <small className="text-muted">1 day ago</small>
-            </div>
-
-            <div className="activity mb-3">
-                <strong>Health Check Scheduled</strong>
-                <div className="text-muted small">Annual medical exam on March 5</div>
-                <small className="text-muted">3 days ago</small>
-            </div>
-
-            <div className="activity">
-                <strong>Training Completed</strong>
-                <div className="text-muted small">Workplace safety training</div>
-                <small className="text-muted">5 days ago</small>
-            </div>
-            </div>
-        </div>
-
-        {/* QUICK ACTIONS */}
-        <div className="col-md-6">
-            <div className="card p-4 h-100 shadow-sm border-0">
-            <h5 className="fw-bold mb-3">Quick Actions</h5>
-
-            <button className="btn btn-primary btn-lg w-100 mb-3">
-                Send Remittance
-            </button>
-
-            <button className="btn btn-light btn-lg w-100 mb-3 border">
-                Upload Document
-            </button>
-
-            <button className="btn btn-light btn-lg w-100 mb-3 border">
-                Browse Jobs
-            </button>
-
-            <button className="btn btn-light btn-lg w-100 border">
-                Contact Support
-            </button>
-            </div>
-        </div>
-
-        </div>
-    </>
-    )}
-
-
-          {/* ===== PROFILE ===== */}
-        {activePage === "profile" && (
-        <>
-            {/* PROFILE HEADER */}
-            <div className="card p-4 mb-4 shadow-sm border-0">
-            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
-                <div className="d-flex align-items-center gap-4">
-                <img
-                    src="/images/woman.png"
-                    width="90"
-                    className="rounded-circle"
-                    alt="profile"
-                />
-
-                <div>
-                    {isEditing ? (
-                        <>
-                            <input
-                            className="form-control mb-2"
-                            value={profile.name}
-                            onChange={(e) => setProfile({...profile, name: e.target.value})}
-                            />
-                            <input
-                            className="form-control"
-                            value={profile.title}
-                            onChange={(e) => setProfile({...profile, title: e.target.value})}
-                            />
-                        </>
+     {/* PROFILE - WITH FUNCTIONAL UPDATE */}
+          {activePage === "profile" && (
+            <div className="animate__animated animate__fadeIn">
+              <div className="card p-0 overflow-hidden shadow-sm">
+                <div style={{height: '120px', background: `linear-gradient(90deg, ${PH_BLUE}, ${PH_RED})`}}></div>
+                <div className="px-4 pb-4">
+                    <div className="d-flex justify-content-between align-items-end" style={{marginTop: '-50px'}}>
+                        <img src={`https://ui-avatars.com/api/?name=${profile.name}&background=fff&color=0038A8&size=120`} className="rounded-circle border border-4 border-white shadow" alt="avatar"/>
+                        
+                        {/* UPDATE BUTTON TOGGLE */}
+                        {!isEditing ? (
+                          <button 
+                            className="btn btn-primary btn-sm px-4 rounded-pill fw-bold mb-2 shadow-sm"
+                            onClick={() => { setIsEditing(true); setTempProfile({...profile}); }}
+                          >
+                            <Pencil size={14} className="me-2"/>Update Info
+                          </button>
                         ) : (
-                        <>
-                            <h3 className="fw-bold">{profile.name}</h3>
-                            <div className="text-muted">{profile.title}</div>
-                        </>
-                        )}
-                    <div className="text-muted small d-flex flex-wrap gap-3 mt-1">
-                    {isEditing ? (
-                        <>
-                            <input
-                            className="form-control"
-                            value={profile.email}
-                            onChange={(e) => setProfile({...profile, email: e.target.value})}
-                            />
-                            <input
-                            className="form-control mt-2"
-                            value={profile.phone}
-                            onChange={(e) => setProfile({...profile, phone: e.target.value})}
-                            />
-                        </>
-                        ) : (
-                        <>
-                            <span><Mail size={14} className="me-1" /> {profile.email}</span>
-                            <span><Phone size={14} className="me-1" /> {profile.phone}</span>
-                        </>
+                          <div className="mb-2 d-flex gap-2">
+                            <button className="btn btn-success btn-sm px-3 rounded-pill fw-bold shadow-sm" onClick={handleSaveProfile}><Check size={14} className="me-1"/> Save</button>
+                            <button className="btn btn-light btn-sm px-3 rounded-pill fw-bold shadow-sm border" onClick={() => setIsEditing(false)}><X size={14} className="me-1"/> Cancel</button>
+                          </div>
                         )}
                     </div>
+
+                    <div className="mt-3">
+                        {isEditing ? (
+                          <div className="col-md-4">
+                             <input type="text" className="form-control form-control-lg fw-bold" value={tempProfile.name} onChange={(e) => setTempProfile({...tempProfile, name: e.target.value})} />
+                          </div>
+                        ) : (
+                          <h4 className="fw-bold mb-1">{profile.name} <Star size={16} fill={PH_YELLOW} color={PH_YELLOW} className="ms-1"/></h4>
+                        )}
+                        <p className="text-muted mt-1"><MapPin size={14} className="me-1"/> Dubai, United Arab Emirates</p>
+                    </div>
+
+                    <hr className="my-4 opacity-10" />
+
+                    <div className="row g-4 mt-2">
+                        {[
+                          { label: "Position", key: "title", color: "text-dark" },
+                          { label: "Monthly Income", key: "salary", color: "text-success" },
+                          { label: "Passport No.", key: "passport", color: "text-dark" },
+                          { label: "Departure Date", key: "departure", color: "text-dark" }
+                        ].map((item, idx) => (
+                          <div className="col-md-3" key={idx}>
+                              <small className="text-muted d-block text-uppercase fw-bold mb-1" style={{fontSize: '10px'}}>{item.label}</small>
+                              {isEditing ? (
+                                <input 
+                                  type="text" 
+                                  className="form-control form-control-sm border-light bg-light" 
+                                  value={tempProfile[item.key]} 
+                                  onChange={(e) => setTempProfile({...tempProfile, [item.key]: e.target.value})}
+                                />
+                              ) : (
+                                <span className={`fw-bold ${item.color}`}>{profile[item.key]}</span>
+                              )}
+                          </div>
+                        ))}
+                    </div>
                 </div>
-                </div>
-
-                <button
-                className="btn btn-primary"
-                onClick={() => setIsEditing(!isEditing)}
-                >
-                <Pencil size={16} className="me-2" />
-                {isEditing ? "Save Profile" : "Edit Profile"}
-                </button>
+              </div>
             </div>
-            </div>
-
-            {/* INFO CARDS */}
-            <div className="row g-4">
-            {/* PERSONAL INFO */}
-            <div className="col-md-6">
-                <div className="card p-4 h-100 shadow-sm border-0">
-                <h5 className="fw-bold mb-4">Personal Information</h5>
-                <InfoItem
-                label="Date of Birth"
-                value={profile.dob}
-                editing={isEditing}
-                onChange={(val) => setProfile({...profile, dob: val})}
-                />
-                <InfoItem
-                label="Nationality"
-                value={profile.nationality}
-                editing={isEditing}
-                onChange={(val) => setProfile({...profile, nationality: val})}
-                />
-                <InfoItem
-                label="passport Number"
-                value={profile.passport}
-                editing={isEditing}
-                onChange={(val) => setProfile({...profile, passport: val})}
-                />
-                
-                </div>
-            </div>
-
-            {/* EMPLOYMENT INFO */}
-            <div className="col-md-6">
-                <div className="card p-4 h-100 shadow-sm border-0">
-                <h5 className="fw-bold mb-4">Employment Information</h5>
-                <InfoItem
-                label="Current Employer"
-                value={profile.employer}
-                editing={isEditing}
-                onChange={(val) => setProfile({...profile, employer: val})}
-                />
-                <InfoItem
-                label="Position"
-                value={profile.position}
-                editing={isEditing}
-                onChange={(val) => setProfile({...profile, position: val})}
-                />
-                <InfoItem
-                label="Contract Start"
-                value={profile.contract}
-                editing={isEditing}
-                onChange={(val) => setProfile({...profile, contract: val})}
-                />
-                
-                </div>
-            </div>
-            </div>
-
-            {/* ===== SKILLS & EMERGENCY CONTACT ===== */}
-            <div className="row g-4 mt-1">
-
-            {/* SKILLS & CERTIFICATIONS */}
-            <div className="col-md-6">
-                <div className="card p-4 shadow-sm border-0 h-100">
-                <h5 className="fw-bold mb-4">Skills & Certifications</h5>
-
-                {[
-                    "Registered Nurse License",
-                    "BLS Certification",
-                    "ACLS Certification",
-                    "ICU Specialist",
-                ].map((skill, index) => (
-                    <div
-                    key={index}
-                    className="d-flex justify-content-between align-items-center bg-light rounded px-4 py-3 mb-3"
-                    >
-                    <span className="fw-medium">{skill}</span>
-                    <span className="text-success fw-semibold">Valid</span>
+          )}
+          {/* DOCUMENTS */}
+          {activePage === "documents" && (
+            <div className="animate__animated animate__fadeIn">
+              <div className="d-flex justify-content-between mb-4 align-items-center">
+                <h5 className="fw-bold mb-0">Document Repository</h5>
+                <button className="btn btn-ph-blue btn-sm px-4 fw-bold" data-bs-toggle="modal" data-bs-target="#uploadModal">+ Upload New</button>
+              </div>
+              <div className="row g-3">
+                {documents.map((doc, i) => (
+                    <div className="col-md-6" key={i}>
+                        <div className="card p-3 d-flex flex-row align-items-center justify-content-between hover-shadow">
+                            <div className="d-flex align-items-center gap-3">
+                                <div className="p-2 bg-light rounded text-ph-blue"><FileText/></div>
+                                <div>
+                                    <h6 className="mb-0 fw-bold small">{doc.n}</h6>
+                                    <small className="text-muted" style={{fontSize:'10px'}}>{doc.d} • {doc.s}</small>
+                                </div>
+                            </div>
+                            <button className="btn btn-light border-0"><Download size={18} className="text-muted"/></button>
+                        </div>
                     </div>
                 ))}
-                </div>
-            </div>
+              </div>
 
-            {/* EMERGENCY CONTACT */}
-            <div className="col-md-6">
-                <div className="card p-4 shadow-sm border-0 h-100">
-                <h5 className="fw-bold mb-4">Emergency Contact</h5>
-
-                <div className="mb-4">
-                    <div className="text-muted small">Name</div>
-                    <div className="fw-semibold fs-5">Juan Santos (Spouse)</div>
-                </div>
-
-                <div className="mb-4">
-                    <div className="text-muted small">Phone Number</div>
-                    <div className="fw-semibold fs-5">+63 917 123 4567</div>
-                </div>
-
-                <div className="mb-4">
-                    <div className="text-muted small">Relationship</div>
-                    <div className="fw-semibold fs-5">Husband</div>
-                </div>
-
-                <div>
-                    <div className="text-muted small">Address</div>
-                    <div className="fw-semibold fs-5">
-                    123 Rizal Street, Manila, Philippines
+              {/* UPLOAD MODAL */}
+              <div className="modal fade" id="uploadModal" tabIndex="-1" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered">
+                  <div className="modal-content border-0 shadow-lg" style={{borderRadius: '20px'}}>
+                    <div className="modal-header border-0 px-4 pt-4">
+                      <h5 className="fw-bold">Upload Document</h5>
+                      <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
                     </div>
+                    <form onSubmit={handleUpload}>
+                      <div className="modal-body p-4">
+                        <div className="mb-3">
+                          <label className="form-label small fw-bold">Document Name</label>
+                          <input type="text" className="form-control" placeholder="e.g. Visa Copy" value={newDocName} onChange={(e) => setNewDocName(e.target.value)} required />
+                        </div>
+                        <div className="p-4 border border-2 border-dashed rounded text-center bg-light">
+                           <Download size={24} className="text-muted mb-2"/><br/>
+                           <small className="text-muted">Click to select file</small>
+                        </div>
+                        <button type="submit" className="btn btn-ph-blue w-100 mt-4 py-2 fw-bold">Save to Portal</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+        {/* JOBS */}
+          {activePage === "jobs" && (
+            <div className="animate__animated animate__fadeIn">
+              <div className="card p-3 mb-4 bg-white border-0 shadow-sm">
+                <div className="input-group">
+                    <span className="input-group-text bg-transparent border-end-0"><Search size={18} className="text-muted"/></span>
+                    <input 
+                      type="text" 
+                      className="form-control border-start-0" 
+                      placeholder="Search verified job orders..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                 </div>
-            </div>
-
-            </div>
-                    </>
-                    )}
-
-         {/* ===== JOBS ===== */}
-        {activePage === "jobs" && (
-        <div className="p-4">
-            <h4 className="fw-bold mb-4">Job Opportunities</h4>
-            <p className="text-muted mb-4">Find your next opportunity abroad</p>
-
-            {/* Search & Location Filter (optional) */}
-            <div className="d-flex mb-4 gap-2">
-            <input
-                type="text"
-                placeholder="Search jobs..."
-                className="form-control"
-            />
-            <select className="form-select" style={{ maxWidth: "200px" }}>
-                <option>All Locations</option>
-                <option>Singapore</option>
-                <option>Dubai, UAE</option>
-                <option>Japan</option>
-                <option>UK</option>
-                <option>Hong Kong</option>
-            </select>
-            </div>
-
-            {/* Job Cards */}
-            {[
-            {
-                title: "Registered Nurse",
-                company: "Singapore General Hospital",
-                description: "Seeking experienced RN for general ward duties",
-                location: "Singapore",
-                salary: "SGD 3,500 - 4,500",
-                type: "Full-time",
-                posted: "2 days ago",
-            },
-            {
-                title: "Construction Worker",
-                company: "Al Habtoor Group",
-                description: "Experience in high-rise construction required",
-                location: "Dubai, UAE",
-                salary: "AED 1,800 - 2,200",
-                type: "Full-time",
-                posted: "5 days ago",
-            },
-            {
-                title: "Domestic Helper",
-                company: "Private Family",
-                description: "family of 4, child care experience preferred",
-                location: "Hongkong",
-                salary: "HKD 4,630",
-                type: "Live-in",
-                posted: "1 week ago",
-            },
-            {
-                title: "Hotel Staff",
-                company: "marriott international",
-                description: "Front desk and housekeeping positions available",
-                location: "Doha, Qatar",
-                salary: "QAR 1,800 - 2,200",
-                type: "Full-time",
-                posted: "1 weeks ago",
-            },
-            {
-                title: "Electrical Engineer",
-                company: "Saudi Aramco",
-                description: "5+ years experience in power systems required",
-                location: "Riyadh, Saudi Arabia",
-                salary: "SAR 8,000 - 10,000",
-                type: "Full-time",
-                posted: "2 weeks ago",
-            },
-            {
-                title: "Caregiver",
-                company: "Care Home Services",
-                description: "Elderly care experience required, live-in position",
-                location: "london, UK",
-                salary: "GBP 1,800 - 2,200",
-                type: "Full-time",
-                posted: "3 weeks ago",
-            },
-            
-    ].map((job, i) => (
-      <div
-        key={i}
-        className="card mb-3 p-3 shadow-sm border-0 d-flex flex-column flex-md-row justify-content-between align-items-center"
-      >
-        <div>
-          <h5 className="fw-bold mb-1">{job.title}</h5>
-          <div className="text-muted">{job.company}</div>
-          <div className="text-muted mb-2">{job.description}</div>
-
-          <div className="text-muted d-flex flex-wrap gap-3">
-            <div>📍 {job.location}</div>
-            <div>💰 {job.salary}</div>
-            <div>👜 {job.type}</div>
-            <div>⏱ {job.posted}</div>
-          </div>
-        </div>
-
-        <div className="d-flex gap-2 mt-3 mt-md-0">
-          <button className="btn btn-primary">Apply Now</button>
-          <button className="btn btn-outline-secondary">Save Job</button>
-        </div>
-      </div>
-    ))}
-  </div>
-)}
-
-      {/* ===== DOCUMENTS ===== */}
-        {activePage === "documents" && (
-            
-        <div className="p-4">
-
-            {/* Header */}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h4 className="fw-bold mb-1">My Documents</h4>
-                <small className="text-muted">Manage your important documents</small>
-            </div>
-            <button
-                className="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#uploadModal"
-                >
-                <i className="bi bi-upload me-2"></i> Upload Document
-                </button>
-            </div>
-
-    {/* Summary Cards */}
-    <div className="row g-3 mb-4">
-      {[
-        { value: totalDocs, label: "Total Documents", color: "text-primary" },
-        { value: validDocs, label: "Valid", color: "text-success" },
-        { value: expiringDocs, label: "Expiring Soon", color: "text-warning" },
-        { value: expiredDocs, label: "Expired", color: "text-danger" },
-      ].map((card, i) => (
-        <div className="col-md-3" key={i}>
-          <div className="card p-3 text-center shadow-sm border-0">
-            <h3 className={`fw-bold mb-2 ${card.color}`}>{card.value}</h3>
-            <small className="text-muted">{card.label}</small>
-          </div>
-        </div>
-      ))}
-    </div>
-
-    {/* Document Table */}
-    <div className="table-responsive">
-      <table className="table align-middle">
-        <thead className="table-light">
-          <tr>
-            <th>Document</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Expiry Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-  {documents.map((doc, i) => (
-    <tr key={i}>
-      <td>
-        <strong>{doc.name}</strong>
-        <br />
-        <small className="text-muted">Uploaded {doc.uploaded}</small>
-      </td>
-
-      <td>{doc.type}</td>
-
-      <td>
-        <span
-          className={`badge ${
-            doc.status === "Valid"
-              ? "bg-success"
-              : doc.status === "Expiring"
-              ? "bg-warning text-dark"
-              : "bg-danger"
-          }`}
-        >
-          {doc.status}
-        </span>
-      </td>
-
-      <td>{doc.expiry || "—"}</td>
-
-      <td className="d-flex gap-2 flex-wrap">
-
-        {/* PREVIEW */}
-        <button
-          className="btn btn-link p-0 text-primary"
-          data-bs-toggle="modal"
-          data-bs-target="#previewModal"
-          onClick={() => setPreviewFile(doc.fileUrl)}
-        >
-          <i className="bi bi-eye me-1"></i> Preview
-        </button>
-
-        {/* DOWNLOAD */}
-        <a href={doc.fileUrl} download className="btn btn-link p-0">
-          <i className="bi bi-download"></i>
-        </a>
-
-        {/* REPLACE */}
-        <label className="btn btn-link p-0 text-warning mb-0">
-          <i className="bi bi-arrow-repeat"></i>
-          <input
-            type="file"
-            hidden
-            onChange={(e) => replaceFile(i, e.target.files[0])}
-          />
-        </label>
-
-        {/* DELETE */}
-        <button
-          className="btn btn-link p-0 text-danger"
-          onClick={() => deleteDocument(i)}
-        >
-          <i className="bi bi-trash"></i>
-        </button>
-
-      </td>
-    </tr>
-  ))}
-</tbody>
-      </table>
-    </div>
-
-            {/* UPLOAD MODAL */}
-        <div className="modal fade" id="uploadModal">
-        <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-
-            <div className="modal-header">
-                <h5 className="modal-title">Upload Document</h5>
-                <button className="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-
-            <div className="modal-body">
-
-                {/* Document Name */}
-                <label className="form-label">Document Name</label>
-                <input
-                className="form-control mb-3"
-                value={docName}
-                onChange={(e) => setDocName(e.target.value)}
-                />
-
-        {/* Type */}
-        <label className="form-label">Type</label>
-        <select
-          className="form-select mb-3"
-          value={docType}
-          onChange={(e) => setDocType(e.target.value)}
-        >
-          <option value="">Select type</option>
-          <option>Identity</option>
-          <option>Employment</option>
-          <option>Health</option>
-          <option>Legal</option>
-          <option>Insurance</option>
-        </select>
-
-        {/* Expiry */}
-        <label className="form-label">Expiry Date</label>
-        <input
-          type="date"
-          className="form-control mb-3"
-          value={expiryDate}
-          onChange={(e) => setExpiryDate(e.target.value)}
-        />
-
-        {/* File */}
-        <label className="form-label">Choose File</label>
-        <input
-          type="file"
-          className="form-control"
-          onChange={(e) => setSelectedFile(e.target.files[0])}
-        />
-
-      </div>
-
-      <div className="modal-footer">
-        <button className="btn btn-secondary" data-bs-dismiss="modal">
-          Cancel
-        </button>
-
-        <button
-          className="btn btn-primary"
-          onClick={handleUpload}
-          data-bs-dismiss="modal"
-        >
-          Upload
-        </button>
-      </div>
-
-    </div>
-  </div>
-</div>
-  
-
- {/* ✅ PDF PREVIEW MODAL GOES HERE */}
-    <div className="modal fade" id="previewModal">
-      <div className="modal-dialog modal-lg modal-dialog-centered">
-        <div className="modal-content">
-
-          <div className="modal-header">
-            <h5 className="modal-title">Document Preview</h5>
-            <button className="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div className="modal-body text-center">
-            {previewFile && (
-              <iframe
-                src={previewFile}
-                width="100%"
-                height="500px"
-                title="PDF Preview"
-              />
-            )}
-          </div>
-
-        </div>
-      </div>
-    </div>
-  
-  </div>
-)}
-
-
-     {/* ===== SUPPORT ===== */}
-
-       {activePage === "support" && (
-        
-        <div className="p-4">
-
-            {/* HEADER */}
-            <div className="mb-4">
-            <h4 className="fw-bold mb-1">Support Center</h4>
-            <small className="text-muted">We're here to help you</small>
-            </div>
-
-            {/* SUPPORT OPTIONS */}
-            <div className="row g-4">
-
-            {/* Phone */}
-            <div className="col-md-4">
-                <div className="card text-center p-4 shadow-sm border-0 h-100">
-                <Phone size={30} className="text-primary mb-3" />
-                <h5 className="fw-bold">Phone Support</h5>
-                <p className="text-muted">+63 2 8722 0000</p>
-                <button className="btn btn-outline-primary btn-lg w-100">Call Now</button>
-                </div>
-            </div>
-
-            {/* Email */}
-            <div className="col-md-4">
-                <div className="card text-center p-4 shadow-sm border-0 h-100">
-                <Mail size={30} className="text-success mb-3" />
-                <h5 className="fw-bold">Email Support</h5>
-                <p className="text-muted">support@ofwportal.ph</p>
-                <button className="btn btn-outline-success btn-lg w-100">Send Email</button>
-                </div>
-            </div>
-
-            {/* Chat */}
-            <div className="col-md-4">
-                <div className="card text-center p-4 shadow-sm border-0 h-100">
-                <HelpCircle size={30} className="text-warning mb-3" />
-                <h5 className="fw-bold">Live Chat</h5>
-                <p className="text-muted">Available 24/7</p>
-                <button className="btn btn-outline-dark btn-lg w-100">Start Chat</button>
-                </div>
-            </div>
-
-            </div>
-
-            {/* EMERGENCY HOTLINES */}
-            <div className="card border-danger-subtle bg-danger-subtle p-4 mt-4 shadow-sm">
-            <div className="d-flex gap-3">
-                <Phone className="text-danger" size={28} />
-                <div>
-                <h5 className="fw-bold mb-2">Emergency Hotlines</h5>
-                <div className="text-muted">POLO-OWWA Hotline: 1348 (Philippines)</div>
-                <div className="text-muted">DFA Hotline: +63 2 8834 4000</div>
-                <div className="text-muted">Philippine Embassy: Contact nearest embassy</div>
-                </div>
-            </div>
-            </div>
-
-            {/* FAQ */}
-            <div className="card p-4 mt-4 shadow-sm border-0">
-            <h5 className="fw-bold mb-3">Frequently Asked Questions</h5>
-
-            <div className="mb-3">
-                <h6 className="fw-semibold">How do I renew my work visa?</h6>
-                <p className="text-muted mb-0">
-                Contact your employer at least 3 months before expiry.
-                </p>
-            </div>
-
-            <hr />
-
-            <div className="mb-3">
-                <h6 className="fw-semibold">What documents do I need to travel home?</h6>
-                <p className="text-muted mb-0">
-                Valid passport, OEC, and proof of employment.
-                </p>
-            </div>
-
-            <hr />
-
-            <div>
-                <h6 className="fw-semibold">What should I do in an emergency?</h6>
-                <p className="text-muted mb-0">
-                Contact your emergency contact and the Philippine embassy.
-                </p>
-            </div>
-            </div>
-
-                    {/* CONTACT FORM */}
-                    <div className="card p-4 mt-4 shadow-sm border-0">
-                    <h5 className="fw-bold mb-4">Send us a message</h5>
-
-                    <div className="mb-3">
-                        <label className="form-label fw-semibold">Subject</label>
-                        <input className="form-control" placeholder="What do you need help with?" />
+              </div>
+              <div className="row g-3">
+                {filteredJobs.length > 0 ? (
+                  filteredJobs.map((job) => (
+                    <div className="col-12" key={job.id}>
+                        <div className="card p-3 hover-shadow transition">
+                            <div className="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <span className="badge bg-light text-primary mb-2 border">{job.h}</span>
+                                    <h6 className="fw-bold mb-1">{job.t}</h6>
+                                    <div className="d-flex gap-3 text-muted small">
+                                        <span><MapPin size={12} className="me-1"/> {job.l}</span>
+                                        <span><CreditCard size={12} className="me-1"/> {job.a}</span>
+                                    </div>
+                                </div>
+                                <button 
+                                  className={`btn btn-sm fw-bold px-4 ${applyingId === job.id ? 'btn-secondary disabled' : 'btn-outline-primary'}`}
+                                  onClick={() => handleApply(job.id, job.t)}
+                                >
+                                  {applyingId === job.id ? (
+                                    <span className="spinner-border spinner-border-sm me-2"></span>
+                                  ) : "Apply Now"}
+                                </button>
+                            </div>
+                        </div>
                     </div>
-
-                    <div className="mb-3">
-                        <label className="form-label fw-semibold">Category</label>
-                        <select className="form-select">
-                        <option>Select a category</option>
-                        <option>Account Issues</option>
-                        <option>Document Assistance</option>
-                        <option>Employment Concerns</option>
-                        <option>Technical Support</option>
-                        </select>
-                    </div>
-
-                    <div className="mb-4">
-                        <label className="form-label fw-semibold">Message</label>
-                        <textarea
-                        className="form-control"
-                        rows="4"
-                        placeholder="Describe your issue..."
-                        />
-                    </div>
-
-                    <button className="btn btn-primary btn-lg w-100">
-                        Submit Request
-                    </button>
-                    </div>
-
-                </div>
-                )}
-                {/* ===== RESCUE REPORT ===== */}
-{activePage === "rescue" && (
-  <div className="p-4 d-flex justify-content-center align-items-center" style={{ minHeight: "70vh" , backgroundImage: "url('/images/support.webp')", backgroundSize: "cover", borderRadius: "16px" }}>
-  
-    {/* EMERGENCY BUTTON */}
-    {!showEmergencyPanel && (
-      <button
-        className="btn btn-danger btn-lg px-5 py-4 fw-bold"
-        style={{ fontSize: "22px", borderRadius: "16px" }}
-        onClick={() => setShowEmergencyPanel(true)}
-      >
-        🚨 EMERGENCY
-      </button>
-    )}
-
-    {/* CENTER PANEL */}
-    {showEmergencyPanel && (
-      <div
-        className="card shadow-lg border-0 p-4"
-        style={{
-          width: "100%",
-          maxWidth: "420px",
-          borderRadius: "16px",
-        }}
-      >
-        {/* HEADER */}
-        <h4 className="fw-bold text-center mb-3">
-          OFW Tabang Services
-        </h4>
-
-        <p className="text-muted text-center mb-4">
-          Please enter code
-        </p>
-
-        {/* CODE INPUT */}
-        <input
-          type="text"
-          className="form-control mb-4 text-center"
-          placeholder="Enter emergency code"
-          value={emergencyCode}
-          onChange={(e) => setEmergencyCode(e.target.value)}
-        />
-
-        <div className="d-flex flex-column gap-3">
-           <button
-            className="btn btn-outline-primary w-100 py-2"
-            onClick={() => setActivePage("complaint")}
-            >
-            Complaint
-            </button>
-
-            <button
-        className="btn btn-danger w-100 py-2"
-        onClick={() => setActivePage("urgent")}
-        >
-        Urgent
-        </button>
-        </div>
-
-       
-
-        {/* BACK */}
-        <button
-          className="btn btn-link mt-3 text-muted"
-          onClick={() => {
-            setShowEmergencyPanel(false);
-            setEmergencyCode("");
-          }}
-        >
-          ← Back
-        </button>
-      </div>
-    )}
-  </div>
-)}
-{/* ===== COMPLAINT PAGE ===== */}
-{activePage === "complaint" && (
-  <div className="p-4">
-
-    <h4 className="fw-bold mb-4">Complaint Form</h4>
-
-    {/* ================= GENERAL INFORMATION ================= */}
-    <div className="card p-4 mb-4 shadow-sm border-0">
-      <h6 className="fw-bold mb-4">General Information</h6>
-
-      <div className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">Foreign Recruitment Agency</label>
-          <input className="form-control" placeholder="None" />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">OFW's Full Name</label>
-          <input className="form-control" />
-        </div>
-
-        <div className="col-md-4">
-          <label className="form-label">Gender</label>
-          <select className="form-select">
-            <option>None</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div className="col-md-4">
-          <label className="form-label">Birthdate</label>
-          <input type="date" className="form-control" />
-        </div>
-
-        <div className="col-md-4">
-          <label className="form-label">Occupation</label>
-          <input className="form-control" />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">National / ISEMA ID</label>
-          <input className="form-control" />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Passport No.</label>
-          <input className="form-control" />
-        </div>
-      </div>
-    </div>
-
-    {/* ================= CONTACT INFORMATION ================= */}
-    <div className="card p-4 mb-4 shadow-sm border-0">
-      <h6 className="fw-bold mb-4">Contact Information</h6>
-
-      <div className="row g-3">
-        <div className="col-md-6">
-          <label className="form-label">E-mail</label>
-          <input type="email" className="form-control" />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Contact Person</label>
-          <input className="form-control" />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Primary Contact</label>
-          <input className="form-control" />
-        </div>
-
-        <div className="col-md-6">
-          <label className="form-label">Secondary Contact</label>
-          <input className="form-control" />
-        </div>
-
-        <div className="col-12">
-          <label className="form-label">Address Abroad</label>
-          <textarea className="form-control" rows="2" />
-        </div>
-      </div>
-    </div>
-
-    {/* ================= IMAGE EVIDENCES ================= */}
-    <div className="card p-4 mb-4 shadow-sm border-0">
-      <h6 className="fw-bold mb-4">Image Evidences</h6>
-
-      <div className="row g-3">
-        <div className="col-md-4">
-          <label className="form-label">Image 1</label>
-          <input type="file" className="form-control" />
-        </div>
-
-        <div className="col-md-4">
-          <label className="form-label">Image 2</label>
-          <input type="file" className="form-control" />
-        </div>
-
-        <div className="col-md-4">
-          <label className="form-label">Image 3</label>
-          <input type="file" className="form-control" />
-        </div>
-      </div>
-    </div>
-
-    {/* ================= COMPLAINT SECTION ================= */}
-    <div className="card p-4 shadow-sm border-0">
-      <h6 className="fw-bold mb-4">Complaint Section</h6>
-
-      <label className="form-label">Complaint</label>
-      <textarea
-        className="form-control mb-4"
-        rows="5"
-        placeholder="Describe your complaint in detail..."
-      />
-
-      <button className="btn btn-primary btn-lg w-100">
-        Submit Complaint
-      </button>
-
-      <button
-        className="btn btn-link w-100 mt-3"
-        onClick={() => setActivePage("rescue")}
-      >
-        ← Back to Rescue Report
-      </button>
-    </div>
-
-  </div>
-)}
-{/* ===== URGENT PAGE ===== */}
-{activePage === "urgent" && (
-  <div className="p-4">
-    <h4 className="fw-bold mb-4 text-danger">
-      Emergency Location
-    </h4>
-
-    {/* LOADING */}
-    {isLocating && (
-      <div className="text-center mt-5">
-        <div className="spinner-border text-danger mb-3" />
-        <div className="fw-semibold">
-          Please wait… we are searching your location
-        </div>
-      </div>
-    )}
-
-    {/* MAP */}
-    {userLocation && (
-      <div className="card p-3 shadow-sm border-0">
-        <h6 className="fw-bold mb-3">📍 Your Exact Location</h6>
-
-        <div style={{ height: "350px" }}>
-          <iframe
-            title="User Location"
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-            src={`https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}&z=17&output=embed`}
-          />
-        </div>
-
-        <div className="mt-3 small">
-          <div><strong>Latitude:</strong> {userLocation.lat}</div>
-          <div><strong>Longitude:</strong> {userLocation.lng}</div>
-        </div>
-      </div>
-    )}
-
-    {/* ERROR */}
-    {locationError && (
-      <div className="alert alert-danger">
-        {locationError}
-      </div>
-    )}
-
-    {/* BACK */}
-    <button
-      className="btn btn-link mt-4"
-      onClick={() => setActivePage("rescue")}
-    >
-      ← Back to Rescue Report
-    </button>
-  </div>
-)}
-                </div>
-                </div>
-                </div>
-                );
-                }
-            const InfoItem = ({ label, value, editing, onChange }) => (
-            <div className="mb-3">
-                <div className="text-muted small">{label}</div>
-
-                {editing ? (
-                <input
-                    className="form-control"
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
-                />
+                  ))
                 ) : (
-                <div className="fw-semibold">{value}</div>
+                  <div className="text-center py-5 text-muted">No jobs found matching your search.</div>
                 )}
+              </div>
             </div>
-            );
+          )}
 
+        {/* RESCUE PAGE */}
+          {activePage === "rescue" && (
+            <div className="animate__animated animate__fadeIn">
+              <div className="row g-4">
+                {/* Left Side: SOS Action & Protocol */}
+                <div className="col-lg-5 text-center border-end border-light">
+                  {!showEmergencyPanel ? (
+                    <div className="py-5">
+                        <div className="mb-4 position-relative d-inline-block">
+                           <button className="btn btn-danger btn-lg rounded-circle shadow-lg pulse-red" style={{width: '180px', height: '180px', zIndex: 2, position: 'relative'}} onClick={() => setShowEmergencyPanel(true)}>
+                               <AlertTriangle size={60} /><br/><span className="fw-bold">SOS</span>
+                           </button>
+                           {/* Decorative rings */}
+                           <div className="position-absolute top-50 start-50 translate-middle rounded-circle border border-danger opacity-25" style={{width: '220px', height: '220px'}}></div>
+                        </div>
+                        <h4 className="fw-bold text-dark">Emergency SOS</h4>
+                        <p className="text-muted mx-auto px-3 mb-4" style={{maxWidth: '350px'}}>
+                          Your location, profile, and agency details will be broadcasted to rescue authorities.
+                        </p>
+                        
+                        <div className="bg-white p-3 rounded-4 shadow-sm text-start mx-auto" style={{maxWidth: '350px'}}>
+                           <h6 className="fw-bold small mb-3 text-uppercase opacity-50">Rescue Protocol:</h6>
+                           <div className="d-flex gap-2 mb-2 small align-items-center">
+                              <Check size={16} className="text-success"/> <span>GPS Coordinates Logged</span>
+                           </div>
+                           <div className="d-flex gap-2 mb-2 small align-items-center">
+                              <Check size={16} className="text-success"/> <span>DMW Response Team Notified</span>
+                           </div>
+                           <div className="d-flex gap-2 small align-items-center">
+                              <Check size={16} className="text-success"/> <span>Emergency Contacts Alerted</span>
+                           </div>
+                        </div>
+                    </div>
+                  ) : (
+                    <div className="card mx-auto p-4 shadow-lg border-0 my-4 bg-white" style={{maxWidth:'400px', borderRadius: '25px'}}>
+                      <div className="text-danger mb-3"><AlertTriangle size={48} className="animate__animated animate__flash animate__infinite" /></div>
+                      <h5 className="fw-bold text-danger mb-2">Final Confirmation</h5>
+                      <p className="text-muted small mb-4">You are about to signal an immediate life-safety emergency. Are you sure?</p>
+                      
+                      <div className="d-grid gap-2">
+                        <button className="btn btn-danger py-3 fw-bold shadow-sm" onClick={() => {
+                          alert("SIGNAL ENCRYPTED: Rescue teams have been dispatched to your location.");
+                          setShowEmergencyPanel(false);
+                        }}>
+                          CONFIRM & SEND SIGNAL
+                        </button>
+                        <button className="btn btn-outline-secondary py-2 border-0" onClick={() => setShowEmergencyPanel(false)}>Cancel / Accidental Tap</button>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
+                {/* Right Side: Map, Location Details & Consular Info */}
+                <div className="col-lg-7">
+                  {/* SIMULATED MAP INTERFACE */}
+                  <div className="card border-0 shadow-sm overflow-hidden mb-4" style={{borderRadius: '20px'}}>
+                    <div className="bg-white p-3 border-bottom d-flex justify-content-between align-items-center">
+                       <div>
+                          <span className="small fw-bold d-block"><MapPin size={14} className="text-danger me-1"/> Current GPS Feed</span>
+                          <code className="text-muted small" style={{fontSize: '10px'}}>Lat: 25.2048° N, Long: 55.2708° E</code>
+                       </div>
+                       <div className="d-flex align-items-center gap-2">
+                          <span className="spinner-grow spinner-grow-sm text-success"></span>
+                          <span className="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">Locating...</span>
+                       </div>
+                    </div>
+                    <div style={{height: '280px', backgroundColor: '#f1f3f5', position: 'relative', overflow: 'hidden'}}>
+                      {/* Grid Background */}
+                      <div style={{ position: 'absolute', width: '100%', height: '100%', backgroundImage: 'linear-gradient(#dee2e6 1px, transparent 1px), linear-gradient(90deg, #dee2e6 1px, transparent 1px)', backgroundSize: '30px 30px', opacity: 0.3 }}></div>
+                      
+                      {/* Pulse Marker */}
+                      <div className="position-absolute top-50 start-50 translate-middle text-center">
+                         <div className="pulse-red rounded-circle mb-1" style={{width: '24px', height: '24px', background: PH_RED, border: '4px solid white', boxShadow: '0 0 10px rgba(0,0,0,0.2)'}}></div>
+                         <div className="bg-dark text-white px-2 py-1 rounded small fw-bold" style={{fontSize: '10px'}}>YOU ARE HERE</div>
+                      </div>
+
+                      {/* Floating Map Controls */}
+                      <div className="position-absolute bottom-0 end-0 p-3 d-flex flex-column gap-2">
+                         <button className="btn btn-white btn-sm shadow-sm bg-white" onClick={() => alert("Zooming In...")}>+</button>
+                         <button className="btn btn-white btn-sm shadow-sm bg-white" onClick={() => alert("Zooming Out...")}>-</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* NEAREST CONSULATE INFO */}
+                  <div className="card border-0 shadow-sm p-3 mb-4 bg-primary text-white" style={{background: `linear-gradient(45deg, ${PH_BLUE}, #0056b3)`}}>
+                    <div className="d-flex align-items-center gap-3">
+                       <div className="p-2 bg-white bg-opacity-20 rounded-3"><ShieldCheck size={24} /></div>
+                       <div>
+                          <h6 className="mb-0 fw-bold">Nearest Philippine Consulate</h6>
+                          <small className="opacity-75">7th St, Al Qusais 3, Dubai, UAE</small>
+                       </div>
+                       <button className="btn btn-white btn-sm ms-auto bg-white text-primary fw-bold px-3">Call</button>
+                    </div>
+                  </div>
+
+                  {/* QUICK ACTION HOTLINES */}
+                  <div className="row g-2">
+                    {[
+                      { n: "DMW Response Team", v: "+63 2 8722-1144", icon: <Phone size={14}/> },
+                      { n: "Agency Welfare Officer", v: profile.agencyPhone, icon: <User size={14}/> }
+                    ].map((h, i) => (
+                      <div className="col-sm-6" key={i}>
+                        <div className="p-3 bg-white rounded-4 shadow-sm border border-light d-flex justify-content-between align-items-center hover-shadow transition">
+                          <div>
+                            <small className="text-muted d-block text-uppercase fw-bold" style={{fontSize: '9px'}}>{h.n}</small>
+                            <span className="fw-bold small">{h.v}</span>
+                          </div>
+                          <div className="p-2 bg-light rounded-circle text-primary">{h.icon}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+  );
+}
